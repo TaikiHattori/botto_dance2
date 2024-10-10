@@ -5,6 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Upload;
 use Illuminate\Http\Request;
 
+use Aws\S3\S3Client;
+use Aws\Exception\AwsException;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth; 
+
+
+
 class UploadController extends Controller
 {
     /**
@@ -12,7 +19,8 @@ class UploadController extends Controller
      */
     public function index()
     {
-        //
+       $uploads = Auth::user()->uploads;
+        return view('uploads.index', compact('uploads'));
     }
 
     /**
@@ -20,7 +28,8 @@ class UploadController extends Controller
      */
     public function create()
     {
-        //
+        // 🔽 追加
+        return view('uploads.create');
     }
 
     /**
@@ -28,15 +37,63 @@ class UploadController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'file' => 'required|mimes:mp3',
+            
+        ]);
+
+
+        $file = $request->file('file');
+        $fileName = $file->getClientOriginalName();
+
+        // S3にアップロード
+        $s3 = new S3Client([
+            'version' => 'latest',
+            'region'  => env('AWS_DEFAULT_REGION'),
+            'credentials' => [
+                'key'    => env('AWS_ACCESS_KEY_ID'),
+                'secret' => env('AWS_SECRET_ACCESS_KEY'),
+            ],
+        ]);
+
+        $bucket = env('AWS_BUCKET');
+        $key =  $fileName;
+
+        // dd($key);  ファイル名取得できている
+
+        try {
+            $result = $s3->putObject([
+                'Bucket' => $bucket,
+                'Key'    => $key,
+                'SourceFile' => $file->getPathname(),
+                
+            ]);
+
+            // アップロードされたファイルのURLを取得
+            $s3Url = $result['ObjectURL'];
+
+
+            // データベースに保存
+            $request->user()->uploads()->create([
+                'title' => $fileName, // ファイル名をタイトルとして保存
+                'mp3_url' => $s3Url,
+            ]);
+
+//dd($fileName); ファイル名取得できている
+
+            return redirect()->route('uploads.index')->with('s3_url', $s3Url);
+            } catch (AwsException $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+            }
     }
+    
 
     /**
      * Display the specified resource.
      */
     public function show(Upload $upload)
     {
-        //
+        return view('uploads.show', compact('upload'));
     }
 
     /**
@@ -60,6 +117,8 @@ class UploadController extends Controller
      */
     public function destroy(Upload $upload)
     {
-        //
+        $upload->delete();
+
+        return redirect()->route('uploads.index');
     }
 }
