@@ -9,4 +9,11 @@ class Upload extends Model
 {
     /** @use HasFactory<\Database\Factories\UploadFactory> */
     use HasFactory;
+
+     protected $fillable = ['title','mp3_url',];
+
+    public function user()
+  {
+    return $this->belongsTo(User::class);
+  }
 }
