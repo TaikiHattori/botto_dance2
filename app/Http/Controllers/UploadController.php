@@ -9,6 +9,8 @@ use Aws\S3\S3Client;
 use Aws\Exception\AwsException;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth; 
+use Illuminate\Support\Facades\Log;
+
 
 
 
@@ -83,8 +85,11 @@ class UploadController extends Controller
 
             return redirect()->route('uploads.index')->with('s3_url', $s3Url);
             } catch (AwsException $e) {
+            // エラーメッセージをログに記録
+            Log::error('S3 Upload Error: ' . $e->getMessage());
+            // エラーメッセージをJSON形式で返す
             return response()->json(['error' => $e->getMessage()], 500);
-            }
+        }
     }
     
 
