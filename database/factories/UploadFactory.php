@@ -2,6 +2,9 @@
 
 namespace Database\Factories;
 
+// 🔽 2行追加
+use App\Models\Upload;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -9,6 +12,8 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class UploadFactory extends Factory
 {
+    // 🔽 追加
+  protected $model = Upload::class;
     /**
      * Define the model's default state.
      *
@@ -17,7 +22,9 @@ class UploadFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+                // 🔽 追加
+            'user_id' => User::factory(), // UserモデルのFactoryを使用してユーザを生成
+            'upload' => $this->faker->text(200) // ダミーのテキストデータ
         ];
     }
 }
