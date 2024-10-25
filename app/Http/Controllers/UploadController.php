@@ -43,11 +43,13 @@ class UploadController extends Controller
             // 1. バリデーションのデバッグ
             Log::info('Starting file upload process');
             
-            $validated = $request->validate([
-                'file' => 'required|mimes:mp3',
-            ]);
-            Log::info('File validation passed');
+            // $validated = $request->validate([
+            //     'file' => 'required|mimes:mp3',
+            // ]);
+            // Log::info('File validation passed');
 
+            //dd($validated);
+    
             // 2. ファイル情報のデバッグ
             $file = $request->file('file');
             $fileName = $file->getClientOriginalName();
