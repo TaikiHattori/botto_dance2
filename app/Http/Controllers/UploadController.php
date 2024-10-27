@@ -63,18 +63,21 @@ class UploadController extends Controller
             // 3. S3設定のデバッグ
             $s3Config = [
                 'version' => 'latest',
-                'region'  => env('AWS_DEFAULT_REGION'),
-                'endpoint' => env('AWS_ENDPOINT'),
-                'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
+                'region'  => config('filesystems.disks.s3.region'),
+                'endpoint' => config('sample.endpoint'),
+                'use_path_style_endpoint' => config('sample.use_path_style_endpoint', false),
                 'credentials' => [
-                    'key'    => env('AWS_ACCESS_KEY_ID'),
-                    'secret' => env('AWS_SECRET_ACCESS_KEY'),
+                    'key'    => config('sample.key'),
+                    'secret' => config('sample.secret'),
                 ]
             ];
+
+            //dd($s3Config);//
+
             Log::info('S3 configuration', [
                 'region' => $s3Config['region'],
                 'endpoint' => $s3Config['endpoint'],
-                'bucket' => env('AWS_BUCKET')
+                'bucket' => config('sample.bucket')
             ]);
 
             // 4. S3クライアント作成
@@ -82,9 +85,11 @@ class UploadController extends Controller
             Log::info('S3 client created successfully');
 
             // 5. S3アップロード
-            $bucket = env('AWS_BUCKET');
+            $bucket = config('sample.bucket');
             $key = $fileName;
             
+            //dd($bucket);//dance-battle1取得できた
+
             $uploadParams = [
                 'Bucket' => $bucket,
                 'Key'    => $key,
