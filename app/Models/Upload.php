@@ -16,4 +16,12 @@ class Upload extends Model
   {
     return $this->belongsTo(User::class);
   }
+
+  /**
+     * リレーションシップの定義：Uploadは複数のExtractionを持つ
+     */
+    public function extractions()
+    {
+      return $this->hasMany(Extraction::class);
+    }
 }
