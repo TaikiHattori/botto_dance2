@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\UploadController;
 use App\Http\Controllers\ExtractionController;
+use App\Http\Controllers\PlaylistController;
 
 
 Route::get('/', function () {
@@ -34,3 +35,6 @@ Route::post('/extraction', [ExtractionController::class, 'store'])->name('extrac
 Route::get('/extractions', [ExtractionController::class, 'index'])->name('extractions.index');
 Route::get('/extractions/{extraction}', [ExtractionController::class, 'show'])->name('extractions.show');
 Route::delete('/extractions/{extraction}', [ExtractionController::class, 'destroy'])->name('extractions.destroy');
+
+Route::get('/playlists/create', [PlaylistController::class, 'create'])->name('playlists.create');
+Route::get('/playlist/play/{id}', [PlaylistController::class, 'play'])->name('playlists.play');
