@@ -28,7 +28,7 @@
             </div>
             <input type="hidden" name="upload_id" value="{{ $upload->id }}">
             <div class="flex justify-end">
-              <button type="submit" class="border-solid border border-white ml-4 hover:opacity-80 text-white font-bold py-2 px-4 rounded">抽出</button>
+              <button type="submit" class="border-solid border border-white ml-4 hover:opacity-80 text-black font-bold py-2 px-4 rounded">抽出</button>
             </div>
           </form>
         </div>
