@@ -118,7 +118,7 @@
                     console.log('Audio source set to:', audioPlayer.src);
 
                     audioPlayer.volume = currentIndex === 0 ? 1 : 0; // 1曲目は音量を最大に設定、2曲目以降は0に設定（フェードイン用）
-                    // audioPlayer.play();
+                    audioPlayer.play();
                     console.log('test2');
 
 
