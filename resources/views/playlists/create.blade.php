@@ -49,7 +49,7 @@
                 const progressCircle = document.getElementById('progressCircle');
                 const fadeDuration = 5; // フェードイン・フェードアウトの時間（秒）
 
-                
+                console.log('Extractions:', extractions);
 
                 function shuffle(array) {
                   for (let i = array.length - 1; i > 0; i--) {
@@ -112,11 +112,14 @@
                 function playNext() {
                   if (currentIndex < shuffledExtractions.length) {
                     const extraction = shuffledExtractions[currentIndex];
+                    console.log('test');
+
                     audioPlayer.src = `{{ url('/playlist/play') }}/${extraction.id}`;
+                    console.log('Audio source set to:', audioPlayer.src);
+
                     audioPlayer.volume = currentIndex === 0 ? 1 : 0; // 1曲目は音量を最大に設定、2曲目以降は0に設定（フェードイン用）
                     audioPlayer.play();
                     
-
 
                     const endSeconds = timeToSeconds(extraction.end);
                     const startSeconds = timeToSeconds(extraction.start);
