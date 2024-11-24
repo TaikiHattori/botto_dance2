@@ -46,11 +46,19 @@ class PlaylistController extends Controller
                 'Bucket' => $bucket,
                 'Key' => $key,
             ]);
+            
+             // ファイルに出力
+            //  $filePath = 'C:\\Users\\Taiki Hattori\\Desktop\\result_body_output.txt';
+            //   $bytesWritten = file_put_contents($filePath, $result);
+            //  if ($bytesWritten === false) {
+            //      error_log("Failed to write to file: $filePath");
+            //  } else {
+            //      error_log("Successfully wrote $bytesWritten bytes to file: $filePath");
+            //  }
             echo $result['Body'];
         });
 
 
-        
 //-----------------------------------
 //11.23時点↓
         // オブジェクトの取得

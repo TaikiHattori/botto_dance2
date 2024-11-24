@@ -1,0 +1,68 @@
+Model Data
+----------
+Data can be retrieved from the model object using the get() method of the
+model (e.g., `$result->get($key)`) or "accessing the result like an
+associative array (e.g. `$result['key']`). You can also execute JMESPath
+expressions on the result data using the search() method.
+
+{
+    "Body": {},
+    "DeleteMarker": false,
+    "AcceptRanges": "bytes",
+    "Expiration": "",
+    "Restore": "",
+    "LastModified": "2024-11-21T07:54:19+00:00",
+    "ContentLength": 1200078,
+    "ETag": "\"14684fe4d460ed3c684010b4476ce7d1\"",
+    "ChecksumCRC32": "",
+    "ChecksumCRC32C": "",
+    "ChecksumSHA1": "",
+    "ChecksumSHA256": "",
+    "MissingMeta": "",
+    "VersionId": "pi797ngf7tGKM8FUJn4fBJH74LCAjjzD",
+    "CacheControl": "",
+    "ContentDisposition": "",
+    "ContentEncoding": "",
+    "ContentLanguage": "",
+    "ContentRange": "",
+    "ContentType": "audio\/mpeg",
+    "Expires": "1970-01-01T00:00:00+00:00",
+    "WebsiteRedirectLocation": "",
+    "ServerSideEncryption": "AES256",
+    "Metadata": [],
+    "SSECustomerAlgorithm": "",
+    "SSECustomerKeyMD5": "",
+    "SSEKMSKeyId": "",
+    "BucketKeyEnabled": false,
+    "StorageClass": "",
+    "RequestCharged": "",
+    "ReplicationStatus": "",
+    "PartsCount": "",
+    "TagCount": "",
+    "ObjectLockMode": "",
+    "ObjectLockRetainUntilDate": "1970-01-01T00:00:00+00:00",
+    "ObjectLockLegalHoldStatus": "",
+    "ExpiresString": "",
+    "@metadata": {
+        "statusCode": 200,
+        "effectiveUri": "https:\/\/dance-battle1.s3.ap-northeast-3.amazonaws.com\/maou_bgm_acoustic10%E9%AD%94%E7%8E%8B%E9%AD%82.mp3",
+        "headers": {
+            "x-amz-id-2": "KhfHhQ8p4iK3JQYmMqaJCatb4an2oIH5paVZOVWSk4yMySkWGjGFtb\/myRma1g4La7i9LYYuLa4=",
+            "x-amz-request-id": "HDABQ573KGFVJ3Q2",
+            "date": "Sun, 24 Nov 2024 04:52:37 GMT",
+            "last-modified": "Thu, 21 Nov 2024 07:54:19 GMT",
+            "etag": "\"14684fe4d460ed3c684010b4476ce7d1\"",
+            "x-amz-server-side-encryption": "AES256",
+            "x-amz-version-id": "pi797ngf7tGKM8FUJn4fBJH74LCAjjzD",
+            "accept-ranges": "bytes",
+            "content-type": "audio\/mpeg",
+            "content-length": "1200078",
+            "server": "AmazonS3"
+        },
+        "transferStats": {
+            "http": [
+                []
+            ]
+        }
+    }
+}
