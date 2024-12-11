@@ -27,7 +27,7 @@
                 <svg class="absolute top-0 left-0 w-full h-full" viewBox="-20 -20 140 140">
                   {{-- <circle cx="50" cy="50" r="45" class="background-circle" /> --}}
                   <circle id="progressCircle" cx="50" cy="50" r="45" class="progress-bar" stroke-linecap="round"/>
-                  <image href="{{ asset('images/tsuki.png') }}" x="6" y="6" style="width: 5.5rem;height: 5.5rem;" />
+                  <image href="{{ asset('storage/images/tsuki.png') }}" x="6" y="6" style="width: 5.5rem;height: 5.5rem;" />
                 </svg>
               </div>
 
