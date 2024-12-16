@@ -10,6 +10,51 @@
   </x-slot> --}}
 
   <style>
+    html, body {
+      color: #ffffff; /* テキスト色を白に */
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+
+    .text-gray-800, .text-gray-900, .dark\:text-gray-100 {
+      color: #ffffff !important; /* テキスト色を白に */
+    }
+    .container {
+      min-height: 100vh; /* コンテナの高さを画面全体に */
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* 光るエフェクトの追加 */
+    .background-circle {
+      stroke: #fff;
+      stroke-width: 2;
+      fill: none;
+      opacity: 0.7;
+      filter: blur(2px) drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+    }
+
+    .progress-bar {
+      stroke: #D3F3F9;
+      stroke-width: 6;
+      fill: none;
+      stroke-dasharray: 283;
+      stroke-dashoffset: 283;
+      filter: drop-shadow(0 0 6px #D3F3F9) drop-shadow(0 0 12px #D3F3F9);
+    }
+
+
+    .neon-icon {
+    stroke: white;
+    filter: drop-shadow(0 0 0px #D3F3F9)
+            drop-shadow(0 0 1px #D3F3F9)
+            drop-shadow(0 0 3px #D3F3F9)
+            drop-shadow(0 0 6px #D3F3F9)
+            drop-shadow(0 0 8px #D3F3F9);
+    }
   </style>
 
   <div class="py-12">
