@@ -18,7 +18,7 @@
     }
 
     .text-gray-800, .text-gray-900, .dark\:text-gray-100 {
-      color: #ffffff !important; /* テキスト色を白に */
+      color: #000000;
     }
     .container {
       min-height: 100vh; /* コンテナの高さを画面全体に */
