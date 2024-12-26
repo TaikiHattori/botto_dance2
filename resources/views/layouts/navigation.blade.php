@@ -129,7 +129,7 @@
     border-bottom-width: 6px;
     }
 
-    .text-gray-800, .text-gray-900, .text-gray-100, .text-gray-500
+    .text-gray-800, .text-gray-900, .text-gray-100, .text-gray-500, .text-gray-600 
     {
         color: #ffffff !important;
     }
@@ -137,5 +137,10 @@
     .border-indigo-400
     {
         border-color: #ffffff ;
+    }
+
+    .text-indigo-700
+    {
+        color: #4169e1;
     }
 </style>
