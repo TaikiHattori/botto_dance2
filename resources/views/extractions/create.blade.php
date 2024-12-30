@@ -10,6 +10,9 @@
   </x-slot> --}}
 
   <style>
+    input {
+      color: black;
+    }
   </style>
 
   <div class="py-12">
