@@ -68,7 +68,8 @@
               <!-- 再生バーを円形に変更 -->
               <div class="w-96 h-96" style="transform: rotate(-90deg);">
                 <svg class="absolute top-0 left-0 w-full h-full" viewBox="-20 -20 140 140">
-                  <circle id="progressCircle" cx="50" cy="50" r="45" class="progress-bar" stroke-linecap="round"/>
+                <circle cx="50" cy="50" r="45" class="background-circle" />  
+                <circle id="progressCircle" cx="50" cy="50" r="45" class="progress-bar" stroke-linecap="round"/>
                   <image href="{{ asset('storage/images/tsuki.png') }}" x="6" y="6" style="width: 5.5rem;height: 5.5rem;" />
                 </svg>
               </div>
@@ -139,6 +140,19 @@
                             currentIndex++;
                             playNext();
                           };
+
+                         // プログレスバーの更新
+                          const startTime = audioContext.currentTime;
+                          function updateProgress() {
+                            const elapsedTime = audioContext.currentTime - startTime;
+                            const progress = Math.min(elapsedTime / songDuration, 1);
+                            const offset = 283 - (progress * 283);
+                            progressCircle.style.strokeDashoffset = offset;
+                            if (progress < 1) {
+                              requestAnimationFrame(updateProgress);
+                            }
+                          }
+                          updateProgress();
                         });
                       });
                   } else {
