@@ -114,6 +114,11 @@
 
                 const shuffledExtractions = shuffle(extractions);
 
+                function fadeOut(audioContext, gainNode, duration) {
+                  gainNode.gain.setValueAtTime(1, audioContext.currentTime);
+                  gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + duration);
+                }
+                
                 function playNext() {
                   if (currentIndex < shuffledExtractions.length) {
                     const extraction = shuffledExtractions[currentIndex];
