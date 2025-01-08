@@ -46,14 +46,13 @@
       filter: drop-shadow(0 0 6px #D3F3F9) drop-shadow(0 0 12px #D3F3F9);
     }
 
-
     .neon-icon {
-    stroke: white;
-    filter: drop-shadow(0 0 0px #D3F3F9)
-            drop-shadow(0 0 1px #D3F3F9)
-            drop-shadow(0 0 3px #D3F3F9)
-            drop-shadow(0 0 6px #D3F3F9)
-            drop-shadow(0 0 8px #D3F3F9);
+      stroke: white;
+      filter: drop-shadow(0 0 0px #D3F3F9)
+              drop-shadow(0 0 1px #D3F3F9)
+              drop-shadow(0 0 3px #D3F3F9)
+              drop-shadow(0 0 6px #D3F3F9)
+              drop-shadow(0 0 8px #D3F3F9);
     }
   </style>
 
@@ -68,8 +67,8 @@
               <!-- 再生バーを円形に変更 -->
               <div class="w-96 h-96" style="transform: rotate(-90deg);">
                 <svg class="absolute top-0 left-0 w-full h-full" viewBox="-20 -20 140 140">
-                <circle cx="50" cy="50" r="45" class="background-circle" />  
-                <circle id="progressCircle" cx="50" cy="50" r="45" class="progress-bar" stroke-linecap="round"/>
+                  <circle cx="50" cy="50" r="45" class="background-circle" />
+                  <circle id="progressCircle" cx="50" cy="50" r="45" class="progress-bar" stroke-linecap="round"/>
                   <image href="{{ asset('storage/images/tsuki.png') }}" x="6" y="6" style="width: 5.5rem;height: 5.5rem;" />
                 </svg>
               </div>
@@ -118,9 +117,12 @@
                   gainNode.gain.setValueAtTime(1, audioContext.currentTime);
                   gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + duration);
                 }
-                
+
                 function playNext() {
                   if (currentIndex < shuffledExtractions.length) {
+                    console.log('currentIndex:', currentIndex);// 現在のインデックスが1ずつ増えないと無限ループしてしまう？
+                    console.log('shuffledExtractions.length:', shuffledExtractions.length);
+                    
                     const extraction = shuffledExtractions[currentIndex];
                     const startSeconds = timeToSeconds(extraction.start);
                     const endSeconds = timeToSeconds(extraction.end);
@@ -133,16 +135,26 @@
                           audioContext = new (window.AudioContext || window.webkitAudioContext)();
                         }
                         audioContext.decodeAudioData(data, buffer => {
-                          if (currentSource) {
-                            currentSource.stop();
-                          }
+                          
+
+                          // gainNodeの初期化
                           currentSource = audioContext.createBufferSource();
+                          gainNode = audioContext.createGain();
                           currentSource.buffer = buffer;
-                          currentSource.connect(audioContext.destination);
+                          currentSource.connect(gainNode).connect(audioContext.destination);
+                          
+                          //startメソッド：オーディオバッファソースの再生を開始するためのもの
                           currentSource.start(0, startSeconds, songDuration);
+
+                          //gainNodeを初期化した後にフェードアウト関数を呼び出さないと機能しない
+                          // (songDuration - fadeDuration)秒後にfadeDuration秒間のフェードアウトを開始
+                          setTimeout(() => {
+                            fadeOut(audioContext, gainNode, fadeDuration);
+                          }, (songDuration - fadeDuration) * 1000);
 
                           currentSource.onended = () => {
                             currentIndex++;
+
                             playNext();
                           };
 
