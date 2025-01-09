@@ -113,6 +113,11 @@
 
                 const shuffledExtractions = shuffle(extractions);
 
+                function fadeIn(audioContext, gainNode, duration) {
+                  gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+                  gainNode.gain.linearRampToValueAtTime(1, audioContext.currentTime + duration);
+                }
+                
                 function fadeOut(audioContext, gainNode, duration) {
                   gainNode.gain.setValueAtTime(1, audioContext.currentTime);
                   gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + duration);
@@ -145,6 +150,9 @@
                           
                           //startメソッド：オーディオバッファソースの再生を開始するためのもの
                           currentSource.start(0, startSeconds, songDuration);
+
+                          // 再生0秒でfadeDuration秒間のフェードインを開始
+                          fadeIn(audioContext, gainNode, fadeDuration);
 
                           //gainNodeを初期化した後にフェードアウト関数を呼び出さないと機能しない
                           // (songDuration - fadeDuration)秒後にfadeDuration秒間のフェードアウトを開始
