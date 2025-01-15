@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth; 
 use Illuminate\Support\Facades\Log;
 
+use Illuminate\Support\Facades\Gate;
 
 
 
@@ -30,6 +31,11 @@ class UploadController extends Controller
      */
     public function create()
     {
+        // 認可ポリシーを適用
+        if (Gate::denies('upload')) {
+            abort(403, 'This action is unauthorized.');
+        }
+        
         // 🔽 追加
         return view('uploads.create');
     }
@@ -39,6 +45,11 @@ class UploadController extends Controller
      */
     public function store(Request $request)
     {
+        // 認可ポリシーを適用
+        if (Gate::denies('upload')) {
+            abort(403, 'This action is unauthorized.');
+        }
+        
         try {
             // 1. バリデーションのデバッグ
             Log::info('Starting file upload process');
