@@ -30,7 +30,7 @@ class UploadPolicy
     public function create(User $user): bool
     {
         // 'new' ロールを持つユーザーにはアップロードを許可しない
-        //return $user->role !== 'new';
+        return $user->role !== 'new';
     }
 
     /**
