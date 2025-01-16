@@ -6,7 +6,7 @@ use Illuminate\Support\ServiceProvider;
 
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as BaseAuthServiceProvider; // エイリアスを使用
 use App\Models\User;
-use App\Policies\UploadPolicy;
+// use App\Policies\UploadPolicy;
 use Illuminate\Support\Facades\Gate;
 
 class AuthServiceProvider extends BaseAuthServiceProvider
@@ -19,9 +19,9 @@ class AuthServiceProvider extends BaseAuthServiceProvider
         //
     }
 
-    protected $policies = [
-        User::class => UploadPolicy::class,
-    ];
+    // protected $policies = [
+    //     User::class => UploadPolicy::class,
+    // ];
 
     /**
      * Bootstrap services.
