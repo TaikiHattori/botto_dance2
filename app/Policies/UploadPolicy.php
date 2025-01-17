@@ -31,6 +31,12 @@ class UploadPolicy
     {
         // 'new' ロールを持つユーザーにはアップロードを許可しない
         //return $user->role !== 'new';⇐不要（なくてもUP制限できた）
+
+        //----------------------------------------------------------------
+        // 特定のメールアドレスを持つユーザーにのみアップロードを許可
+        $allowedEmail = 'kiheitai@example.com'; 
+
+        return $user->email === $allowedEmail;
     }
 
     /**
