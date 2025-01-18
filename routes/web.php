@@ -43,3 +43,4 @@ Route::delete('/extractions/{extraction}', [ExtractionController::class, 'destro
 
 Route::get('/playlists/create', [PlaylistController::class, 'create'])->name('playlists.create');
 Route::get('/playlist/play/{id}', [PlaylistController::class, 'play'])->name('playlists.play');
+Route::get('/playlist/check/{id}', [PlaylistController::class, 'check'])->name('playlists.check');

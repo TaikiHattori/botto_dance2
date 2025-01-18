@@ -133,6 +133,12 @@
                     const endSeconds = timeToSeconds(extraction.end);
                     songDuration = endSeconds - startSeconds;
 
+                    // 曲再生の条件をチェック（そのアカウントがUPした曲だけ再生可能）
+              fetch(`{{ url('/playlist/check') }}/${extraction.upload_id}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.allowed) {
+                    
                     fetch(`{{ url('/playlist/play') }}/${extraction.id}`)
                       .then(response => response.arrayBuffer())
                       .then(data => {
@@ -181,9 +187,13 @@
                         });
                       });
                   } else {
-                    playButton.style.display = 'block'; // 全ての再生が終わったら再生ボタンを表示する
-                  }
-                }
+                        console.log('曲を再生するには、このアカウントで曲をUPしてください。');
+                    }
+                });
+        } else {
+            playButton.style.display = 'block'; // 全ての再生が終わったら再生ボタンを表示する
+        }
+    }
 
                 playButton.addEventListener('click', () => {
                   playButton.style.transition = 'opacity 0.5s ease'; // トランジションを設定
