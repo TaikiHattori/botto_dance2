@@ -7,20 +7,28 @@ use App\Models\Extraction;
 
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Auth; // Authファサードをインポート（checkメソッドのために）
+
 use Aws\S3\S3Client;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class PlaylistController extends Controller
 {
+    public function check($id)
+    {        
+        $upload = Upload::findOrFail($id);
+
+        if ($upload->user_id === Auth::id()) {
+            return response()->json(['allowed' => true]);
+        }
+
+        return response()->json(['allowed' => false]);
+    }
+    
     public function play($id)
     {
         // Extractionデータを取得
         $extraction = Extraction::findOrFail($id);
-
-        // アクセス制御
-        // if (!Gate::allows('view', $extraction)) {
-        //     abort(403, 'Unauthorized action.');
-        // }
         
         $upload = Upload::findOrFail($extraction->upload_id);
 
@@ -36,7 +44,7 @@ class PlaylistController extends Controller
 
 
 
- // オブジェクトの取得
+        // オブジェクトの取得
         $bucket = config('filesystems.disks.s3.bucket');
         $key = ltrim(urldecode(parse_url($upload->mp3_url, PHP_URL_PATH)), '/');
         
@@ -47,20 +55,20 @@ class PlaylistController extends Controller
                 'Key' => $key,
             ]);
             
-             // ファイルに出力
-            //  $filePath = 'C:\\Users\\Taiki Hattori\\Desktop\\result_body_output.txt';
-            //   $bytesWritten = file_put_contents($filePath, $result);
-            //  if ($bytesWritten === false) {
-            //      error_log("Failed to write to file: $filePath");
-            //  } else {
-            //      error_log("Successfully wrote $bytesWritten bytes to file: $filePath");
-            //  }
+        // ファイルに出力
+        //  $filePath = 'C:\\Users\\Taiki Hattori\\Desktop\\result_body_output.txt';
+        //   $bytesWritten = file_put_contents($filePath, $result);
+        //  if ($bytesWritten === false) {
+        //      error_log("Failed to write to file: $filePath");
+        //  } else {
+        //      error_log("Successfully wrote $bytesWritten bytes to file: $filePath");
+        //  }
             echo $result['Body'];
         });
 
 
-//-----------------------------------
-//11.23時点↓
+        //-----------------------------------
+        //11.23時点↓
         // オブジェクトの取得
         // $bucket = config('filesystems.disks.s3.bucket');
         // $key = ltrim(urldecode(parse_url($upload->mp3_url, PHP_URL_PATH)), '/');
@@ -78,8 +86,8 @@ class PlaylistController extends Controller
         //     $ffmpegCommand = "ffmpeg -ss $start_seconds -t $duration_seconds -i \"$s3Url\" -f mp3 -";
         //     passthru($ffmpegCommand);
         // });
-//11.23時点↑
-//-----------------------------------
+        //11.23時点↑
+        //-----------------------------------
 
 
     
