@@ -111,8 +111,13 @@ class PlaylistController extends Controller
     public function create(Request $request)
     {
         //すべてのExtractionを取得
-        $extractions = Extraction::orderBy('id')->get();
+        // $extractions = Extraction::orderBy('id')->get();
         
+        //現在のユーザーがアップロードしたextractionsのみを取得
+        $extractions = Extraction::whereHas('upload', function($query){
+            $query->where('user_id', Auth::id());
+        })->orderby('id')->get();
+
         return view('playlists.create', compact('extractions'));
     }
 
