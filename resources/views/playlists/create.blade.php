@@ -61,7 +61,7 @@
       <div class="overflow-hidden shadow-sm sm:rounded-lg">
         <div class="p-6 text-gray-900 dark:text-gray-100">
           @if ($extractions->isEmpty())
-            <p>S3に曲が存在しません。</p>
+            <p>このアカウントで曲がUPされていません。</p>
           @else
             <div class="relative flex justify-center items-center flex-col">
               <!-- 再生バーを円形に変更 -->
