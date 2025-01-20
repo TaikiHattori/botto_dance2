@@ -62,7 +62,8 @@
         <div class="p-6 text-gray-900 dark:text-gray-100">
           @if ($extractions->isEmpty())
             <p>このアカウントのプレイリストが作成されていません。</p>
-            <p>このアカウントで曲をUPして、プレイリストを作成してください。</p>
+            <p>「アップロード」を使って、曲をライブラリにUPして、</p>
+            <p>「ライブラリ」を使って、プレイリストを作成してください。</p>
           @else
             <div class="relative flex justify-center items-center flex-col">
               <!-- 再生バーを円形に変更 -->
