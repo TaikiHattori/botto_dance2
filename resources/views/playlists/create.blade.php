@@ -61,7 +61,8 @@
       <div class="overflow-hidden shadow-sm sm:rounded-lg">
         <div class="p-6 text-gray-900 dark:text-gray-100">
           @if ($extractions->isEmpty())
-            <p>このアカウントで曲がUPされていません。</p>
+            <p>このアカウントのプレイリストが作成されていません。</p>
+            <p>このアカウントで曲をUPして、プレイリストを作成してください。</p>
           @else
             <div class="relative flex justify-center items-center flex-col">
               <!-- 再生バーを円形に変更 -->
