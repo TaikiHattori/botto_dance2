@@ -10,6 +10,11 @@ class Extraction extends Model
     /** @use HasFactory<\Database\Factories\ExtractionFactory> */
     use HasFactory;
 
+    protected $fillable = [
+        'start',
+        'end',
+    ];
+
      /**
      * リレーションシップの定義：Extractionは1つのUploadに属する
      */

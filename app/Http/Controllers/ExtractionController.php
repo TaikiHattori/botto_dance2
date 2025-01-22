@@ -75,7 +75,7 @@ class ExtractionController extends Controller
      */
     public function edit(Extraction $extraction)
     {
-        //
+        return view('extractions.edit',compact('extraction'));
     }
 
     /**
@@ -83,7 +83,22 @@ class ExtractionController extends Controller
      */
     public function update(Request $request, Extraction $extraction)
     {
-        //
+        $request->validate([
+            'start' => 'required|integer|min:0',
+            'end' => 'required|integer|min:0',
+        ]);
+
+        // 数値を適切な時間形式に変換
+        $start = gmdate('H:i:s', $request->input('start'));
+        $end = gmdate('H:i:s', $request->input('end'));
+
+        $extraction->update([
+            'start' => $start,
+            'end' => $end,
+        ]);
+
+        return redirect()->route('extractions.show',$extraction);
+
     }
 
     /**
