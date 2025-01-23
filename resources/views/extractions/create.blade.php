@@ -21,14 +21,23 @@
         <div class="p-6 text-gray-900 dark:text-gray-100">
           <form action="{{ route('extractions.store') }}" method="POST">
             @csrf
+
             <div class="mb-4">
-              <label for="start_time" class="block text-sm font-medium text-white-700">開始（秒）</label>
-              <input type="number" name="start_time" id="start_time" class="mt-1 block w-full rounded" required>
+              <label for="start_time" class="block text-sm font-medium text-white-700">開始</label>
+              <div class="flex">
+              <input type="number" name="start_minu" id="start_minu" class="mt-1 block w-full rounded" required placeholder="分">
+              <input type="number" name="start_sec" id="start_sec" class="mt-1 block w-full rounded" required placeholder="秒">
+              </div>
             </div>
+
             <div class="mb-4">
-              <label for="end_time" class="block text-sm font-medium text-white-700">終了（秒）</label>
-              <input type="number" name="end_time" id="end_time" class="mt-1 block w-full rounded" required>
+              <label for="end_time" class="block text-sm font-medium text-white-700">終了</label>
+              <div class="flex">
+              <input type="number" name="end_minu" id="end_minu" class="mt-1 block w-full rounded" required placeholder="分">
+              <input type="number" name="end_sec" id="end_sec" class="mt-1 block w-full rounded" required placeholder="秒">
+              </div>
             </div>
+
             <input type="hidden" name="upload_id" value="{{ $upload->id }}">
             <div class="flex justify-end">
               <button type="submit" class="border-solid border border-white ml-4 hover:opacity-80 text-white font-bold py-2 px-4 rounded">抽出</button>
