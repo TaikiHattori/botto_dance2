@@ -46,17 +46,25 @@ class ExtractionController extends Controller
      */
     public function store(Request $request)
     {
-         $request->validate([
-        'start_time' => 'required|integer',
-        'end_time' => 'required|integer',
+        $request->validate([
+        'start_minu' => 'required|integer|min:0',
+        'start_sec' => 'required|integer|min:0|max:59',
+        'end_minu' => 'required|integer|min:0',
+        'end_sec' => 'required|integer|min:0|max:59',
         'upload_id' => 'required|exists:uploads,id',
     ]);
+
+    //分と秒をそのまま「00：分：秒」形式に変換
+    $start_time = sprintf('00:%02d:%02d', $request->start_minu, $request->start_sec);
+    $end_time   = sprintf('00:%02d:%02d', $request->end_minu, $request->end_sec);
+    
+    //dd($start_time, $end_time);
 
     // データベースに保存
     $extraction = new Extraction();
     $extraction->upload_id = $request->upload_id;
-    $extraction->start = gmdate("H:i:s", $request->start_time); // 秒数を時:分:秒に変換
-    $extraction->end = gmdate("H:i:s", $request->end_time); // 秒数を時:分:秒に変換
+    $extraction->start = $start_time;
+    $extraction->end = $end_time;
     $extraction->save();
 
         return redirect()->route('extractions.index')->with('success', 'Extraction data saved successfully.');
