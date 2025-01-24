@@ -14,8 +14,8 @@
       <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
         <div class="p-6 text-gray-900 dark:text-gray-100">
           <a href="{{ route('extractions.index') }}" class="text-blue-500 hover:text-blue-700 mr-2">一覧に戻る</a>
-          <p class="text-black dark:text-gray-300 text-lg">開始：{{ $extraction->start }}</p>
-          <p class="text-black dark:text-gray-300 text-lg">終了：{{ $extraction->end }}</p>
+          <p class="text-black dark:text-gray-300 text-lg">開始：{{ substr($extraction->start, 3) }}</p>
+          <p class="text-black dark:text-gray-300 text-lg">終了：{{ substr($extraction->end, 3) }}</p>
 
           <div class="text-black dark:text-gray-400 text-sm">
             <!-- <p>作成日時: {{ $extraction->created_at->format('Y-m-d H:i') }}</p>
