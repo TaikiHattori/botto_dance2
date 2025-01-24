@@ -92,17 +92,19 @@ class ExtractionController extends Controller
     public function update(Request $request, Extraction $extraction)
     {
         $request->validate([
-            'start' => 'required|integer|min:0',
-            'end' => 'required|integer|min:0',
+            'start_minu' => 'required|integer|min:0',
+            'start_sec'  => 'required|integer|min:0|max:59',
+            'end_minu'   => 'required|integer|min:0',
+            'end_sec'    => 'required|integer|min:0|max:59',
         ]);
 
-        // 数値を適切な時間形式に変換
-        $start = gmdate('H:i:s', $request->input('start'));
-        $end = gmdate('H:i:s', $request->input('end'));
+        // 分と秒をそのまま「00：分：秒」形式に変換
+        $start_time = sprintf('00:%02d:%02d', $request->start_minu, $request->start_sec);
+        $end_time   = sprintf('00:%02d:%02d', $request->end_minu, $request->end_sec);
 
         $extraction->update([
-            'start' => $start,
-            'end' => $end,
+            'start' => $start_time,
+            'end' => $end_time,
         ]);
 
         return redirect()->route('extractions.show',$extraction);
