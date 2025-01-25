@@ -66,7 +66,7 @@
             <p>「ライブラリ」を使って、プレイリストを作成してください。</p>
           @else
             <div class="relative flex justify-center items-center flex-col">
-              <!-- 再生バーを円形に変更 -->
+              <!-- 青満月再生バーを円形に変更 -->
               <div class="w-96 h-96" style="transform: rotate(-90deg);">
                 <svg class="absolute top-0 left-0 w-full h-full" viewBox="-20 -20 140 140">
                   <circle cx="50" cy="50" r="45" class="background-circle" />
@@ -75,11 +75,22 @@
                 </svg>
               </div>
 
-              <!-- 再生ボタン -->
+              <!-- 青満月再生ボタン -->
               <button id="playButton" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 hover:opacity-80 text-white font-bold py-2 px-4 rounded-full flex items-center justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.4" stroke-linecap="round" stroke-linejoin="round" class="w-72 h-72 neon-icon"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
               </button>
+            
+
+              <!-- airhorn音 -->
+              <audio id="airhorn" src="{{ asset('storage/music/airhorn.mp3') }}" preload="auto"></audio>
+         
+
+              <!-- airhorn音用再生ボタン -->
+              <button id="airhornButton">
+                📯
+              </button>
             </div>
+
 
             <script>
               document.addEventListener('DOMContentLoaded', function() {
@@ -91,6 +102,9 @@
                 let currentSource;
                 let currentIndex = 0;
                 let songDuration = 0;
+
+                const airhorn = document.getElementById('airhorn');
+                const airhornButton = document.getElementById('airhornButton');
 
                 function shuffle(array) {
                   for (let i = array.length - 1; i > 0; i--) {
@@ -205,6 +219,16 @@
                   }, 500); // トランジションの時間と同じ500ミリ秒後に非表示にする
                   playNext();
                 });
+
+                airhornButton.addEventListener('click', () => {
+                  if (airhorn.paused){
+                    airhorn.play();
+                  } else {
+                    airhorn.pause();
+                  }
+                });
+
+
               });
             </script>
           @endif
