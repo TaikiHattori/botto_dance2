@@ -221,11 +221,8 @@
                 });
 
                 airhornButton.addEventListener('click', () => {
-                  if (airhorn.paused){
-                    airhorn.play();
-                  } else {
-                    airhorn.pause();
-                  }
+                  airhorn.currentTime = 0;//再生位置を最初にセット
+                  airhorn.play();
                 });
 
 
