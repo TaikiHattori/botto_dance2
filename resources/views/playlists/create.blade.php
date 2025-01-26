@@ -233,7 +233,7 @@
                       airhorn.pause();
                       playCount++;
                       playAirhorn();
-                    },150);//1～4回目：一瞬だけ再生（100ミリ秒）
+                    },300);//1～4回目：一瞬だけ再生（300ミリ秒）
                   } else {
                     airhorn.currentTime = 0;
                     airhorn.play();//5回目：フル再生
