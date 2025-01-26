@@ -226,17 +226,17 @@
                 });
 
                 function playAirhorn(){
-                  if (playCount < 4){
+                  if (playCount < 2){
                     airhorn.currentTime = 0;
                     airhorn.play();
                     setTimeout(() => {
                       airhorn.pause();
                       playCount++;
                       playAirhorn();
-                    },1000);//1～4回目：一瞬だけ再生（1000ミリ秒）
+                    },500);//1～2回目：一瞬だけ再生（500ミリ秒）
                   } else {
                     airhorn.currentTime = 0;
-                    airhorn.play();//5回目：フル再生
+                    airhorn.play();//最後：フル再生
                   }
                 }
 
