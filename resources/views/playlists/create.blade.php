@@ -221,9 +221,24 @@
                 });
 
                 airhornButton.addEventListener('click', () => {
-                  airhorn.currentTime = 0;//再生位置を最初にセット
-                  airhorn.play();
+                  playCount = 0;
+                  playAirhorn();
                 });
+
+                function playAirhorn(){
+                  if (playCount < 4){
+                    airhorn.currentTime = 0;
+                    airhorn.play();
+                    setTimeout(() => {
+                      airhorn.pause();
+                      playCount++;
+                      playAirhorn();
+                    },150);//1～4回目：一瞬だけ再生（100ミリ秒）
+                  } else {
+                    airhorn.currentTime = 0;
+                    airhorn.play();//5回目：フル再生
+                  }
+                }
 
 
               });
