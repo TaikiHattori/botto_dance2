@@ -54,6 +54,10 @@
               drop-shadow(0 0 6px #D3F3F9)
               drop-shadow(0 0 8px #D3F3F9);
     }
+
+    .rotate-90 {
+      transform: rotate(90deg);
+    }
   </style>
 
   <div class="py-12">
@@ -78,7 +82,7 @@
 
                 <!-- 青満月再生ボタン -->
                 <button id="playButton" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 hover:opacity-80 text-white font-bold py-2 px-4 rounded-full flex items-center justify-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.4" stroke-linecap="round" stroke-linejoin="round" class="w-72 h-72 neon-icon" transform="rotate(90)">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.4" stroke-linecap="round" stroke-linejoin="round" class="w-72 h-72 neon-icon rotate-90">
                   <circle cx="12" cy="12" r="10"/>
                   <polygon points="10 8 16 12 10 16 10 8"/>
                   </svg>
