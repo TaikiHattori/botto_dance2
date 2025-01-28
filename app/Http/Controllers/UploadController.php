@@ -51,7 +51,7 @@ class UploadController extends Controller
         }
         
         try {
-            // 1. バリデーションのデバッグ
+            //  バリデーションのデバッグ
             Log::info('Starting file upload process');
             
             // $validated = $request->validate([
@@ -61,7 +61,7 @@ class UploadController extends Controller
 
             //dd($validated);
     
-            // 2. ファイル情報のデバッグ
+            //  ファイル情報のデバッグ
             $file = $request->file('file');
             $fileName = $file->getClientOriginalName();
             Log::info('File details', [
@@ -71,7 +71,12 @@ class UploadController extends Controller
                 'path' => $file->getPathname()
             ]);
 
-            // 3. S3設定のデバッグ
+            //曲の長さを取得
+            $filePath = $file->getPathname();
+            $duration = $this->getAudioDuration($filePath);
+            Log::info('File duration', ['duration' => $duration]);
+
+            //  S3設定のデバッグ
             $s3Config = [
                 'version' => 'latest',
                 'region'  => config('filesystems.disks.s3.region'),
@@ -91,14 +96,13 @@ class UploadController extends Controller
                 'bucket' => config('sample.bucket')
             ]);
 
-            // 4. S3クライアント作成
+            //  S3クライアント作成
             $s3 = new S3Client($s3Config);
             Log::info('S3 client created successfully');
 
-            // 5. S3アップロード
+            //  S3アップロード
             $bucket = config('sample.bucket');
             $key = $fileName;
-            
             //dd($bucket);//dance-battle1取得できた
 
             $uploadParams = [
@@ -111,10 +115,11 @@ class UploadController extends Controller
             $result = $s3->putObject($uploadParams);
             Log::info('S3 upload successful', ['url' => $result['ObjectURL']]);
 
-            // 6. データベース保存
+            //  データベース保存
             $upload = $request->user()->uploads()->create([
                 'title' => $fileName,
                 'mp3_url' => $result['ObjectURL'],
+                'duration' => $duration,//曲の長さ
             ]);
             Log::info('Database record created', ['upload_id' => $upload->id]);
 
@@ -146,6 +151,27 @@ class UploadController extends Controller
         }
     }
     
+    private function getAudioDuration($filePath)
+    {
+        //getAudioDurationメソッドは、
+        //内部的な処理に使用されるヘルパーメソッドであり、外部から直接呼び出される必要がないため
+        //「private」function
+
+        //  FFmpegコマンドで曲の長さを取得
+        $command = "ffmpeg -i " . escapeshellarg($filePath) . " 2>&1 | grep 'Duration'";
+        $output = shell_exec($command);
+
+        //出力を解析して曲の長さを計算
+        if (preg_match('/Duration: (\d+):(\d+):(\d+\.\d+)/', $output, $matches)) {
+            $hours = (int)$matches[1];
+            $minutes = (int)$matches[2];
+            $seconds = (float)$matches[3];
+            $duration = ($hours * 3600) + ($minutes * 60) + $seconds;
+            return $duration;
+        }
+
+        return 0;
+    }
 
     /**
      * Display the specified resource.
