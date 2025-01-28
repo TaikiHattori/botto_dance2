@@ -13,12 +13,20 @@
     input {
       color: black;
     }
+
+    .title {
+      font-size: 30px;
+    }
   </style>
 
   <div class="py-12">
     <div class="max-w-md mx-auto sm:px-6 lg:px-8">
       <div class="overflow-hidden shadow-sm sm:rounded-lg">
         <div class="p-6 text-gray-900 dark:text-gray-100">
+
+          <p class="title">{{ $title }}</p>
+          <br>
+
           <form action="{{ route('extractions.store') }}" method="POST">
             @csrf
 
