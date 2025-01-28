@@ -38,7 +38,9 @@ class ExtractionController extends Controller
         $upload = Upload::findOrFail($upload_id);
         //dd($upload);
         
-        return view('extractions.create', compact('upload'));
+        $title = $upload->title;
+
+        return view('extractions.create', compact('upload', 'title'));
     }
 
     /**
