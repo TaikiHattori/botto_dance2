@@ -115,6 +115,13 @@ class UploadController extends Controller
             $result = $s3->putObject($uploadParams);
             Log::info('S3 upload successful', ['url' => $result['ObjectURL']]);
 
+            //  データベース保存ログ
+            Log::info('Saving to database', [
+            'title' => $fileName,
+            'mp3_url' => $result['ObjectURL'],
+            'duration' => $duration, //曲の長さ
+            ]);
+
             //  データベース保存
             $upload = $request->user()->uploads()->create([
                 'title' => $fileName,
@@ -161,13 +168,15 @@ class UploadController extends Controller
         $command = "ffmpeg -i " . escapeshellarg($filePath) . " 2>&1 | grep 'Duration'";
         $output = shell_exec($command);
 
+        Log::info('FFmpeg output', ['output' => $output]);
+
         //出力を解析して曲の長さを計算
         if (preg_match('/Duration: (\d+):(\d+):(\d+\.\d+)/', $output, $matches)) {
             $hours = (int)$matches[1];
             $minutes = (int)$matches[2];
             $seconds = (float)$matches[3];
             $duration = ($hours * 3600) + ($minutes * 60) + $seconds;
-            return $duration;
+            return intval(round($duration));//四捨五入して整数を返す
         }
 
         return 0;
