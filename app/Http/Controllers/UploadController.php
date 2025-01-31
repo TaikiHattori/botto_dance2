@@ -175,11 +175,17 @@ class UploadController extends Controller
             $hours = (int)$matches[1];
             $minutes = (int)$matches[2];
             $seconds = (float)$matches[3];
-            $duration = ($hours * 3600) + ($minutes * 60) + $seconds;
-            return intval(round($duration));//四捨五入して整数を返す
+            $totalSeconds = ($hours * 3600) + ($minutes * 60) + $seconds;
+            
+            //分と秒に変換
+            $minutes = floor($totalSeconds / 60);
+            $seconds = $totalSeconds % 60;
+
+            //mm:ss形式で返す
+            return sprintf('%02d:%02d', $minutes, $seconds);
         }
 
-        return 0;
+        return '00:00';
     }
 
     /**
