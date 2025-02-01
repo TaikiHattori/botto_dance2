@@ -34,9 +34,10 @@ class UploadPolicy
 
         //----------------------------------------------------------------
         // 特定のメールアドレスを持つユーザーにのみアップロードを許可
-        $allowedEmail = 'kiheitai@example.com'; 
+        // $allowedEmail = 'kiheitai@example.com'; 
 
-        return $user->email === $allowedEmail;
+        // return $user->email === $allowedEmail;
+        return true;
     }
 
     /**
