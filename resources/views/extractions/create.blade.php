@@ -17,6 +17,10 @@
     .title {
       font-size: 30px;
     }
+
+    .duration {
+      font-size: 24px;
+    }
   </style>
 
   <div class="py-12">
@@ -25,6 +29,9 @@
         <div class="p-6 text-gray-900 dark:text-gray-100">
 
           <p class="title">{{ $title }}</p>
+          <br>
+
+          <p class="duration">00:00 ~ {{ $duration }}</p>
           <br>
 
           <form action="{{ route('extractions.store') }}" method="POST">

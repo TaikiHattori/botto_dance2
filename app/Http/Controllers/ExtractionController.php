@@ -39,8 +39,9 @@ class ExtractionController extends Controller
         //dd($upload);
         
         $title = $upload->title;
+        $duration = $upload->duration;
 
-        return view('extractions.create', compact('upload', 'title'));
+        return view('extractions.create', compact('upload', 'title', 'duration'));
     }
 
     /**
