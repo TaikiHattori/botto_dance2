@@ -10,6 +10,7 @@ class Upload extends Model
     /** @use HasFactory<\Database\Factories\UploadFactory> */
     use HasFactory;
 
+    //テーブルに新規カラム追加した際に、$fillable必要
     protected $fillable = ['title','mp3_url','duration',];
 
     public function user()
