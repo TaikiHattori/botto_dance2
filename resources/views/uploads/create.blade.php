@@ -30,6 +30,24 @@
     .bg-gray-100 {
       background-color: #1f1f1f !important; /* 背景色を黒っぽく */
     }
+
+    #dropzone-file {
+      opacity: 0;
+      width: 300px;
+    }
+
+    #genre-select {
+        width: 300px;
+        color: black;
+    }
+
+    #genre-select option {
+        color: black;
+    }
+
+    #genre-input {
+        color: black;
+    }
   </style>
 
   {{-- <div class="py-12">
@@ -68,17 +86,29 @@
         </svg>
 
         <h2 class="mt-1 tracking-wide text-white dark:text-gray-200">Music files</h2>
-
         <p class="mt-2 tracking-wide text-white dark:text-gray-400">Upload your file mp3. </p>
 
         @error('upload')
         <span class="text-red-500 text-xs italic">{{ $message }}</span>
         @enderror
 
-        <input id="dropzone-file" type="file" name="file" class="hidden" required onchange="updateFileName(this)" />
+        <br>
+        <input id="dropzone-file" type="file" name="file" required onchange="updateFileName(this)"/>
         <span id="file-name" class="text-white"></span> <!-- アップロードファイル名を表示するための要素 -->
 
-    </label>
+        <!-- ジャンル選択または入力 -->
+        <div>
+            <label for="genre" class="block text-white">ジャンルを選択または入力（任意）：</label>
+              <select id="genre-select" name="genre" class="block w-full mt-1">
+                <option value="">選択</option>
+                <option value="ヒップホップ">ヒップホップ</option>
+                <option value="ロック">ロック</option>
+                <option value="ポップ">ポップ</option>
+                <option value="アニソン">アニソン</option>
+              </select>
+              <input type="text" id="genre-input" name="genre" class="block w-full mt-2" placeholder="または入力">
+            </label>
+        </div>
     <button type="submit" class="w-full border-solid border border-white mt-4 hover:opacity-80 text-white font-bold py-2 px-4 rounded">アップロード</button>
 
   </form>
@@ -89,7 +119,20 @@
 
 <script>
     function updateFileName(input) {
-        const fileName = input.files[0] ? input.files[0].name : 'ファイルを選択してください';
+        const fileName = input.files[0] ? `【  ${input.files[0].name}  】` : 'ファイルを選択してください';
         document.getElementById('file-name').textContent = fileName; // ファイル名を表示
     }
+
+    // ジャンル選択または入力の相互排他処理
+    document.getElementById('genre-select').addEventListener('change', function() {
+        if(this.value) {
+            document.getElementById('genre-input').value = '';
+        } 
+    });
+
+    document.getElementById('genre-input').addEventListener('input', function() {
+        if(this.value) {
+            document.getElementById('genre-select').value = '';
+        }
+    });
 </script>
