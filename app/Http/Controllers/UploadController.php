@@ -115,11 +115,18 @@ class UploadController extends Controller
             $result = $s3->putObject($uploadParams);
             Log::info('S3 upload successful', ['url' => $result['ObjectURL']]);
 
+            //ジャンルログ
+            $genreSelect = $request->genreSelect;//selectタグの取得（name属性を指定）
+            $genreInput = $request->input('genreInput');//inputタグの取得（name属性を指定）
+            $genre = $genreSelect ? $genreSelect : $genreInput;//三項演算子の構文
+            Log::info('genre received from form', ['genre' => $genre]);
+
             //  データベース保存ログ
             Log::info('Saving to database', [
             'title' => $fileName,
             'mp3_url' => $result['ObjectURL'],
             'duration' => $duration, //曲の長さ
+            'genre' => $genre,
             ]);
 
             //  データベース保存
@@ -127,6 +134,7 @@ class UploadController extends Controller
                 'title' => $fileName,
                 'mp3_url' => $result['ObjectURL'],
                 'duration' => $duration,//曲の長さ
+                'genre' => $genre,
             ]);
             Log::info('Database record created', ['upload_id' => $upload->id]);
 

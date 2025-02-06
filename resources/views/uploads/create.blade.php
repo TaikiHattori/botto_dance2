@@ -36,6 +36,7 @@
       width: 300px;
     }
 
+    /* id属性を指定 */
     #genre-select {
         width: 300px;
         color: black;
@@ -92,21 +93,21 @@
         <span class="text-red-500 text-xs italic">{{ $message }}</span>
         @enderror
 
-        <br>
         <input id="dropzone-file" type="file" name="file" required onchange="updateFileName(this)"/>
         <span id="file-name" class="text-white"></span> <!-- アップロードファイル名を表示するための要素 -->
 
+        <br>
         <!-- ジャンル選択または入力 -->
         <div>
-            <label for="genre" class="block text-white">ジャンルを選択または入力（任意）：</label>
-              <select id="genre-select" name="genre" class="block w-full mt-1">
+            <label  class="block text-white">ジャンルを選択または入力（任意）：</label>
+              <select id="genre-select" name="genreSelect" class="block w-full mt-1">
                 <option value="">選択</option>
                 <option value="ヒップホップ">ヒップホップ</option>
                 <option value="ロック">ロック</option>
                 <option value="ポップ">ポップ</option>
                 <option value="アニソン">アニソン</option>
               </select>
-              <input type="text" id="genre-input" name="genre" class="block w-full mt-2" placeholder="または入力">
+              <input type="text" id="genre-input" name="genreInput" class="block w-full mt-2" placeholder="または入力">
             </label>
         </div>
     <button type="submit" class="w-full border-solid border border-white mt-4 hover:opacity-80 text-white font-bold py-2 px-4 rounded">アップロード</button>
