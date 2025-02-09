@@ -123,4 +123,19 @@ class ExtractionController extends Controller
 
     return redirect()->route('extractions.index');
     }
+
+
+    public function bulkDelete(Request $request)
+    {
+
+        Log::info('Request: ',  $request->all());
+
+        $ids = $request->input('extractions');
+        Log::info('Ids to delete: ' , ['ids' => $ids]);
+
+        if ($ids) {
+        Extraction::whereIn('id', $ids)->delete();
+        }
+        return redirect()->route('extractions.index')->with('success', '選択した抽出が削除されました。');
+    }
 }

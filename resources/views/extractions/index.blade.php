@@ -57,12 +57,21 @@
     .hover\:text-blue-700:hover {
       color: #1c86ee !important; /* リンクのホバー時のテキスト色を濃い青に設定 */
     }
+
+    .checked {
+        border: 6px solid #1c86ee; /* チェックされたときのスタイル */
+    }
   </style>
 
   <div class="py-12 px-4">
+    <form id="bulkDelete-extractions" action="{{ route('extractions.bulkDelete') }}" method="POST">
+    @csrf
+    @method('DELETE')
     @foreach ($extractions as $extraction)
     <div class="flex max-w-md mx-auto overflow-hidden rounded-lg shadow-lg mb-4" style="box-shadow: 0px 0px 30px 10px rgb(255 255 255 / 80%);">
-        <div class="w-1/3  bg-no-repeat bg-contain bg-center" style="background-image: url('{{ asset('storage/images/tsuki2.png') }}')"></div>
+        <div class="w-1/3  bg-no-repeat bg-contain bg-center" style="background-image: url('{{ asset('storage/images/tsuki2.png') }}')" onclick="toggleCheckbox({{ $extraction->id }})">
+            <input type="checkbox" name="extractions[]" value="{{ $extraction->id }}" id="checkbox-{{ $extraction->id }}" class="hidden">
+        </div>
     
         <div class="w-2/3 p-4 md:p-4">
             <p class="text-xm font-bold text-white">{{ $extraction->upload->title }}</p>
@@ -71,11 +80,27 @@
 
             <div class="flex justify-between mt-3 item-center">
                 <a href="{{ route('extractions.show', $extraction) }}" class="text-sm hover:text-gray-200">詳細を見る</a>
-
               </div>
         </div>
     </div>
     @endforeach
+
+    <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">削除</button>
+    </form>
   </div>
 
+  <script>
+    function toggleCheckbox(id) {
+        const checkbox = document.getElementById('checkbox-' + id);
+        const container = checkbox.parentElement;
+        
+        checkbox.checked = !checkbox.checked;//論理否定演算
+
+        if (checkbox.checked) {
+            container.classList.add('checked');
+        } else {
+            container.classList.remove('checked');
+        }
+    }
+  </script>
 </x-app-layout>
