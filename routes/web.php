@@ -40,6 +40,7 @@ Route::post('/extraction', [ExtractionController::class, 'store'])->name('extrac
 Route::get('/extractions', [ExtractionController::class, 'index'])->name('extractions.index');
 Route::get('/extractions/{extraction}', [ExtractionController::class, 'show'])->name('extractions.show');
 Route::delete('/extractions/{extraction}', [ExtractionController::class, 'destroy'])->name('extractions.destroy');
+Route::delete('/extractions/bulkDelete', [ExtractionController::class, 'bulkDelete'])->name('extractions.bulkDelete');
 Route::get('/extractions/{extraction}/edit', [ExtractionController::class, 'edit'])->name('extractions.edit');
 Route::put('/extractions/{extraction}', [ExtractionController::class, 'update'])->name('extractions.update');
 
