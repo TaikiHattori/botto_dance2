@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Upload;
 use App\Models\Extraction;
 use Illuminate\Http\Request;
-
-// 🔽 追加
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log; // Logクラスをインポート
+
 
 class ExtractionController extends Controller
 {

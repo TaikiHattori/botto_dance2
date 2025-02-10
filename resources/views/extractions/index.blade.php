@@ -64,7 +64,7 @@
   </style>
 
   <div class="py-12 px-4">
-    <form id="bulkDelete-extractions" action="{{ route('extractions.bulkDelete') }}" method="POST">
+    <form action="{{ route('extractions.bulkDelete') }}" method="POST" onsubmit="return confirm('本当に削除しますか？');">
     @csrf
     @method('DELETE')
     @foreach ($extractions as $extraction)
