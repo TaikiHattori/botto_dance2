@@ -63,7 +63,7 @@
     }
   </style>
 
-  <div class="py-12 px-4">
+  <div class="content py-12 px-4">
     <form action="{{ route('extractions.bulkDelete') }}" method="POST" onsubmit="return confirm('本当に削除しますか？');">
     @csrf
     @method('DELETE')
