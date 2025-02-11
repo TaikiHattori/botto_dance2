@@ -1,4 +1,4 @@
-<nav x-data="{ open: false }" class="px-4 border-b border-gray-100 dark:border-gray-700">
+<nav x-data="{ open: false }" class="fixed-header px-4 border-b border-gray-100 dark:border-gray-700">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
@@ -142,5 +142,21 @@
     .text-indigo-700
     {
         color: #4169e1;
+    }
+
+    /* 固定ヘッダーのスタイル */
+    .fixed-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: #1f1f1f; /* ヘッダーの背景色 */
+      z-index: 1000; /* 他の要素の上に表示 */
+      padding: 1rem; /* ヘッダーの内側の余白 */
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* ヘッダーの影 */
+    }
+
+    .content {
+      padding-top: 4rem; /* ヘッダーの高さ分の余白を追加 */
     }
 </style>
