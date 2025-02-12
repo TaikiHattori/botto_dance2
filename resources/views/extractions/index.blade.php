@@ -63,14 +63,15 @@
     }
   </style>
 
-  <div class="content py-12 px-4">
-    <form action="{{ route('extractions.bulkDelete') }}" method="POST" onsubmit="return confirm('本当に削除しますか？');">
-    @csrf
-    @method('DELETE')
+  <div class="py-12 px-4">
+    <form id="bulkDelete-extractions" action="{{ route('extractions.bulkDelete') }}" method="POST" onsubmit="return confirm('本当に削除しますか？');">
+        @csrf
+        @method('DELETE')  
+
     @foreach ($extractions as $extraction)
     <div class="flex max-w-md mx-auto overflow-hidden rounded-lg shadow-lg mb-4" style="box-shadow: 0px 0px 30px 10px rgb(255 255 255 / 80%);">
         <div class="w-1/3  bg-no-repeat bg-contain bg-center" style="background-image: url('{{ asset('storage/images/tsuki2.png') }}')" onclick="toggleCheckbox({{ $extraction->id }})">
-            <input type="checkbox" name="extractions[]" value="{{ $extraction->id }}" id="checkbox-{{ $extraction->id }}" class="hidden">
+            <input type="checkbox" name="extractions[]" value="{{ $extraction->id }}" id="checkbox-{{ $extraction->id }}" class="hidden" onchange="toggleDeleteButton()">
         </div>
     
         <div class="w-2/3 p-4 md:p-4">
@@ -85,7 +86,6 @@
     </div>
     @endforeach
 
-    <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">削除</button>
     </form>
   </div>
 
@@ -100,6 +100,25 @@
             container.classList.add('checked');
         } else {
             container.classList.remove('checked');
+        }
+        toggleDeleteButton();
+    }
+
+    function toggleDeleteButton() {
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        const deleteForm = document.getElementById('delete-form');
+        let ischecked = false;
+        
+        checkboxes.forEach((checkbox) => {
+            if (checkbox.checked) {
+                ischecked = true;
+            }
+        });
+
+        if (ischecked) {
+            deleteForm.classList.remove('hidden');
+        } else {
+            deleteForm.classList.add('hidden');
         }
     }
   </script>
