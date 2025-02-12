@@ -22,9 +22,16 @@
                     <x-nav-link :href="route('uploads.index')" :active="request()->routeIs('uploads.index')">
                     {{ __('ライブラリ') }}
                     </x-nav-link>
-                     <x-nav-link :href="route('extractions.index')" :active="request()->routeIs('extractions.index')">
+                    <x-nav-link :href="route('extractions.index')" :active="request()->routeIs('extractions.index')">
                     {{ __('プレイリスト') }}
                     </x-nav-link>
+
+                    <!-- 削除ボタン -->
+                    <form action="{{ route('extractions.bulkDelete') }}" method="post" onsubmit="return confirm('本当に削除しますか？');" class="hidden" id="delete-form">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">削除</button>
+                    </form>
                 </div>
             </div>
 
@@ -89,6 +96,13 @@
              <x-responsive-nav-link :href="route('extractions.index')" :active="request()->routeIs('extractions.index')">
             {{ __('プレイリスト') }}
             </x-responsive-nav-link>
+
+            <!-- 削除ボタン -->
+            <form action="{{ route('extractions.bulkDelete') }}" method="post" onsubmit="return confirm('本当に削除しますか？');" class="hidden" id="delete-form">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">削除</button>
+            </form>
         </div>
 
         <!-- Responsive Settings Options -->
@@ -152,7 +166,7 @@
       width: 100%;
       background-color: #1f1f1f; /* ヘッダーの背景色 */
       z-index: 1000; /* 他の要素の上に表示 */
-      padding: 1rem; /* ヘッダーの内側の余白 */
+      padding: 1px; /* ヘッダーの内側の余白 */
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* ヘッダーの影 */
     }
 
