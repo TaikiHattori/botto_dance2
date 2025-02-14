@@ -27,9 +27,10 @@
                     </x-nav-link>
 
                     <!-- 削除ボタン -->
-                    <form action="{{ route('extractions.bulkDelete') }}" method="post" onsubmit="return confirm('本当に削除しますか？');" class="hidden" id="delete-form">
+                    <form action="{{ route('extractions.bulkDelete') }}" method="post" onsubmit="updateDeleteForm(); return confirm('本当に削除しますか？');" class="hidden" id="delete-form">
                         @csrf
                         @method('DELETE')
+                        <div id="hidden-input-container"></div><!-- 隠しフィールドを追加するためのコンテナ -->
                         <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">削除</button>
                     </form>
                 </div>
@@ -98,9 +99,10 @@
             </x-responsive-nav-link>
 
             <!-- 削除ボタン -->
-            <form action="{{ route('extractions.bulkDelete') }}" method="post" onsubmit="return confirm('本当に削除しますか？');" class="hidden" id="delete-form">
+            <form action="{{ route('extractions.bulkDelete') }}" method="post" onsubmit="updateDeleteForm(); return confirm('本当に削除しますか？');" class="hidden" id="delete-form">
                 @csrf
                 @method('DELETE')
+                <div id="hidden-input-container"></div><!-- 隠しフィールドを追加するためのコンテナ -->
                 <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">削除</button>
             </form>
         </div>
