@@ -64,12 +64,8 @@
   </style>
 
   <div class="py-12 px-4">
-    <form id="bulkDelete-extractions" action="{{ route('extractions.bulkDelete') }}" method="POST" onsubmit="return confirm('本当に削除しますか？');">
-        @csrf
-        @method('DELETE')  
-
-    @foreach ($extractions as $extraction)
-    <div class="flex max-w-md mx-auto overflow-hidden rounded-lg shadow-lg mb-4" style="box-shadow: 0px 0px 30px 10px rgb(255 255 255 / 80%);">
+      @foreach ($extractions as $extraction)
+        <div class="flex max-w-md mx-auto overflow-hidden rounded-lg shadow-lg mb-4" style="box-shadow: 0px 0px 30px 10px rgb(255 255 255 / 80%);">
         <div class="w-1/3  bg-no-repeat bg-contain bg-center" style="background-image: url('{{ asset('storage/images/tsuki2.png') }}')" onclick="toggleCheckbox({{ $extraction->id }})">
             <input type="checkbox" name="extractions[]" value="{{ $extraction->id }}" id="checkbox-{{ $extraction->id }}" class="hidden" onchange="toggleDeleteButton()">
         </div>
@@ -83,10 +79,8 @@
                 <a href="{{ route('extractions.show', $extraction) }}" class="text-sm hover:text-gray-200">詳細を見る</a>
               </div>
         </div>
-    </div>
-    @endforeach
-
-    </form>
+        </div>
+      @endforeach
   </div>
 
   <script>
@@ -120,6 +114,23 @@
         } else {
             deleteForm.classList.add('hidden');
         }
+    }
+
+    function updateDeleteForm() {
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        const deleteForm = document.getElementById('delete-form');
+        const hiddenInputContainer = document.getElementById('hidden-input-container');
+        hiddenInputContainer.innerHTML = ''; // 既存の隠しフィールドをクリア※重複防止して最新データを反映しないと変な挙動になる場合がある
+
+        checkboxes.forEach((checkbox) => {
+            if (checkbox.checked) {
+                const hiddenInput = document.createElement('input');
+                hiddenInput.type = 'hidden';
+                hiddenInput.name = 'extractions[]';
+                hiddenInput.value = checkbox.value;
+                hiddenInputContainer.appendChild(hiddenInput);// チェックされたチェックボックスの値を隠しフィールドとして追加
+            }
+        });
     }
   </script>
 </x-app-layout>
