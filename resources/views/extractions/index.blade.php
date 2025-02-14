@@ -64,6 +64,13 @@
   </style>
 
   <div class="py-12 px-4">
+    <form action="{{ route('extractions.bulkDelete') }}" method="post" onsubmit="updateDeleteForm(); return confirm('本当に削除しますか？');" class="hidden" id="delete-form">
+      @csrf
+      @method('DELETE')
+      <div id="hidden-input-container"></div><!-- 隠しフィールドを追加するためのコンテナ -->
+      <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">削除</button>
+    </form>
+
       @foreach ($extractions as $extraction)
         <div class="flex max-w-md mx-auto overflow-hidden rounded-lg shadow-lg mb-4" style="box-shadow: 0px 0px 30px 10px rgb(255 255 255 / 80%);">
         <div class="w-1/3  bg-no-repeat bg-contain bg-center" style="background-image: url('{{ asset('storage/images/tsuki2.png') }}')" onclick="toggleCheckbox({{ $extraction->id }})">
