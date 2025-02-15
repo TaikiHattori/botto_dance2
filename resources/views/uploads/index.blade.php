@@ -58,31 +58,26 @@
     .hover\:text-blue-700:hover {
       color: #1c86ee !important; /* リンクのホバー時のテキスト色を濃い青に設定 */
     }
+
+    .checked {
+        border: 6px solid #1c86ee; /* チェックされたときのスタイル */
+    }
   </style>
 
-  {{-- <div class="py-12">
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-      <div class="overflow-hidden shadow-sm sm:rounded-lg">
-        <div class="p-6 text-gray-900 dark:text-gray-100">
-          @foreach ($uploads as $upload)
-          <div class="mb-4 p-4 rounded-lg">
-            <p class="text-gray-800 dark:text-gray-300">{{ $upload->title }}</p>
-            <p class="text-gray-600 dark:text-gray-400 text-sm">投稿者: {{ $upload->user->name }}</p>
-            <a href="{{ route('uploads.show', $upload) }}" class="text-blue-500 hover:text-blue-700">詳細を見る</a>
-          
-            <a href="{{ route('extractions.create', ['upload_id' => $upload->id]) }}" class="ml-4 text-blue-500 hover:text-blue-700">抽出</a>
-
-          </div>
-          @endforeach
-        </div>
-      </div>
-    </div>
-  </div> --}}
-
 <div class="py-12 px-4">
-@foreach ($uploads as $upload)
-<div class="flex max-w-md mx-auto overflow-hidden rounded-lg shadow-lg mb-4" style="box-shadow: 0px 0px 30px 10px rgb(255 255 255 / 80%);">
-    <div class="w-1/3 bg-no-repeat bg-contain bg-center" style="background-image: url('{{ asset('storage/images/tsuki2.png') }}')"></div>
+
+  <form action="{{ route('uploads.bulkDelete') }}" method="post" onsubmit="updateDeleteForm(); return confirm('本当に削除しますか？');" class="hidden" id="delete-form">
+    @csrf
+    @method('DELETE')
+    <div id="hidden-input-container"></div><!-- 隠しフィールドを追加するためのコンテナ -->
+    <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">削除</button>
+  </form>
+
+  @foreach ($uploads as $upload)
+  <div class="flex max-w-md mx-auto overflow-hidden rounded-lg shadow-lg mb-4" style="box-shadow: 0px 0px 30px 10px rgb(255 255 255 / 80%);">
+    <div class="w-1/3 bg-no-repeat bg-contain bg-center" style="background-image: url('{{ asset('storage/images/tsuki2.png') }}')" onclick="toggleCheckbox({{ $upload->id }})">
+      <input type="checkbox" name="upload[]" value="{{ $upload->id }}" id="checkbox-{{ $upload->id }}" class="hidden" onchange="toggleDeleteButton()">
+    </div>
 
     <div class="w-2/3 p-4 md:p-4">
         <p class="text-xm font-bold text-white">{{ $upload->title }}</p>
@@ -92,8 +87,58 @@
             <a href="{{ route('extractions.create', ['upload_id' => $upload->id]) }}" class="border-solid border border-white px-2 py-1 font-bold text-white uppercase transition-colors duration-300 transform rounded hover:opacity-80 focus:outline-none">抽出</a>
         </div>
     </div>
-</div>
-@endforeach
+  </div>
+  @endforeach
 </div>
 
+<script>
+    function toggleCheckbox(id) {
+        const checkbox = document.getElementById('checkbox-' + id);
+        const container = checkbox.parentElement;
+        
+        checkbox.checked = !checkbox.checked;//論理否定演算
+
+        if (checkbox.checked) {
+            container.classList.add('checked');
+        } else {
+            container.classList.remove('checked');
+        }
+        toggleDeleteButton();
+    }
+
+    function toggleDeleteButton() {
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        const deleteForm = document.getElementById('delete-form');
+        let ischecked = false;
+        
+        checkboxes.forEach((checkbox) => {
+            if (checkbox.checked) {
+                ischecked = true;
+            }
+        });
+
+        if (ischecked) {
+            deleteForm.classList.remove('hidden');
+        } else {
+            deleteForm.classList.add('hidden');
+        }
+    }
+
+    function updateDeleteForm() {
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        const deleteForm = document.getElementById('delete-form');
+        const hiddenInputContainer = document.getElementById('hidden-input-container');
+        hiddenInputContainer.innerHTML = ''; // 既存の隠しフィールドをクリア※重複防止＆最新データを反映しないと変な挙動になる場合がある
+
+        checkboxes.forEach((checkbox) => {
+            if (checkbox.checked) {
+                const hiddenInput = document.createElement('input');
+                hiddenInput.type = 'hidden';
+                hiddenInput.name = 'uploads[]';
+                hiddenInput.value = checkbox.value;
+                hiddenInputContainer.appendChild(hiddenInput);// チェックされたチェックボックスの値を隠しフィールドとして追加
+            }
+        });
+    }
+  </script>
 </x-app-layout>
