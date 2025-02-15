@@ -31,10 +31,10 @@ class UploadController extends Controller
      */
     public function create()
     {
-        // 認可ポリシーを適用
-        if (Gate::denies('upload')) {
-            abort(403, 'This action is unauthorized.');
-        }
+        // 認可ポリシーを適用　※UP権限
+        // if (Gate::denies('upload')) {
+        //     abort(403, 'This action is unauthorized.');
+        // }
         
         // 🔽 追加
         return view('uploads.create');
@@ -44,12 +44,7 @@ class UploadController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-        // 認可ポリシーを適用
-        if (Gate::denies('upload')) {
-            abort(403, 'This action is unauthorized.');
-        }
-        
+    {        
         try {
             //  バリデーションのデバッグ
             Log::info('Starting file upload process');
@@ -76,6 +71,10 @@ class UploadController extends Controller
             $duration = $this->getAudioDuration($filePath);
             Log::info('File duration', ['duration' => $duration]);
 
+            //----------------------------
+            //  S3アップロード
+            //----------------------------
+
             //  S3設定のデバッグ
             $s3Config = [
                 'version' => 'latest',
@@ -100,10 +99,11 @@ class UploadController extends Controller
             $s3 = new S3Client($s3Config);
             Log::info('S3 client created successfully');
 
-            //  S3アップロード
             $bucket = config('sample.bucket');
-            $key = $fileName;
-            //dd($bucket);//dance-battle1取得できた
+            //ユーザー名を取得
+            $userName = Auth::user()->name;
+            //$keyをユーザー名を含む形に変更（mp3_urlカラムなので）
+            $key = $userName . '/' . $fileName;
 
             $uploadParams = [
                 'Bucket' => $bucket,
