@@ -136,6 +136,6 @@ class ExtractionController extends Controller
         if ($ids) {
         Extraction::whereIn('id', $ids)->delete();
         }
-        return redirect()->route('extractions.index')->with('success', '選択した抽出が削除されました。');
+        return redirect()->route('extractions.index');
     }
 }

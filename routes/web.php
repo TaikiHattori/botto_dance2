@@ -34,6 +34,7 @@ require __DIR__.'/auth.php';
 
 Route::post('/upload', [UploadController::class, 'store'])->name('upload');
 Route::get('/uploads', [UploadController::class, 'index'])->name('uploads.index');
+Route::delete('/uploads', [UploadController::class, 'bulkDelete'])->name('uploads.bulkDelete');//複数削除　※'/extractions/bulkDelete'にしたら404エラーになった
 
 Route::get('/extractions/create/{upload_id}', [ExtractionController::class, 'create'])->name('extractions.create');
 Route::post('/extraction', [ExtractionController::class, 'store'])->name('extractions.store');
