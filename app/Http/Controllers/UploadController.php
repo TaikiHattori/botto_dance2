@@ -229,6 +229,20 @@ class UploadController extends Controller
 
         return redirect()->route('uploads.index');
     }
+
+    public function bulkDelete(Request $request)
+    {
+        Log::info('Request: ',  $request->all());
+
+        $ids = $request->input('uploads');
+        Log::info('Ids to delete: ' , ['ids' => $ids]);
+
+        if ($ids) {
+        Upload::whereIn('id', $ids)->delete();
+        }
+
+        return redirect()->route('uploads.index');
+    }
 }
 
 
