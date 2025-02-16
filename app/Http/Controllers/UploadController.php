@@ -7,13 +7,11 @@ use Illuminate\Http\Request;
 
 use Aws\S3\S3Client;
 use Aws\Exception\AwsException;
+
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth; 
 use Illuminate\Support\Facades\Log;
-
 use Illuminate\Support\Facades\Gate;
-
-
 
 class UploadController extends Controller
 {
@@ -86,8 +84,6 @@ class UploadController extends Controller
                     'secret' => config('sample.secret'),
                 ]
             ];
-
-            //dd($s3Config);//
 
             Log::info('S3 configuration', [
                 'region' => $s3Config['region'],
@@ -238,9 +234,64 @@ class UploadController extends Controller
         Log::info('Ids to delete: ' , ['ids' => $ids]);
 
         if ($ids) {
-        Upload::whereIn('id', $ids)->delete();
-        }
+            //S3クライアントの設定
+            $s3Config = [
+                'version' => 'latest',//SDKの最新バージョン使うために必要
+                'region'  => config('sample.region'),
+                'endpoint' => config('sample.endpoint'),
+                'use_path_style_endpoint' => config('sample.use_path_style_endpoint', false),
+                'credentials' => [
+                'key'    => config('sample.key'),
+                'secret' => config('sample.secret'),
+                ]
+            ];
 
+            //S3クライアントの作成
+            $s3 = new S3Client($s3Config);
+            $bucket = config('sample.bucket');
+
+            //DBから削除するレコードを取得
+            $uploads = Upload::whereIn('id', $ids)->get();
+
+            foreach ($uploads as $upload) {
+                try {
+                    // $file = $request->file('file');
+                    // $fileName = $file->getClientOriginalName();
+
+                    //S3のオブジェクト削除
+                    $key = parse_url($upload->mp3_url, PHP_URL_PATH);                    
+                    $key = ltrim($key, '/');//先頭のスラッシュを削除
+                    $key = urldecode($key);//曲UP時URLデコード状態なので、削除時もURLデコードじゃないと削除できない
+                    // dd($key);
+
+                    //AWS SDK for PHPでdeleteObjectメソッドを呼び出す
+                    $s3->deleteObject([
+                        'Bucket' => $bucket,
+                        'Key' => $key,
+                    ]);
+                    Log::info('S3 object deleted', ['key' => $key]);
+
+                    // データベースからレコードを削除
+                    $upload->delete();
+
+                    Log::info('Database record deleted successfully', ['upload_id' => $upload->id]);
+                } catch (AwsException $e) {
+                    Log::error('AWS Error', [
+                        'message' => $e->getMessage(),
+                        'code' => $e->getAwsErrorCode(),
+                        'type' => $e->getAwsErrorType(),
+                        'request_id' => $e->getAwsRequestId()
+                    ]);
+                } catch (\Exception $e) {
+                    Log::error('General Error', [
+                        'message' => $e->getMessage(),
+                        'file' => $e->getFile(),
+                        'line' => $e->getLine()
+                    ]);
+                }
+            }
+        }
+        
         return redirect()->route('uploads.index');
     }
 }
