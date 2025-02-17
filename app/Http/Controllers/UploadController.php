@@ -30,9 +30,9 @@ class UploadController extends Controller
     public function create()
     {
         // 認可ポリシーを適用　※UP権限
-        if (Gate::denies('upload')) {
-            abort(403, 'This action is unauthorized.');
-        }
+        // if (Gate::denies('upload')) {
+        //     abort(403, 'This action is unauthorized.');
+        // }
         
         // 🔽 追加
         return view('uploads.create');
