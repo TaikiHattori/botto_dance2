@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -49,4 +48,28 @@ class User extends Authenticatable
   {
     return $this->hasMany(Upload::class);
   }
+
+//-------------------------------------------
+//ユーザー削除したら、そのユーザーのS3UP曲も削除
+//-------------------------------------------
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($user){
+        //ユーザーが削除される前に、そのユーザーのS3UP曲を削除（フック設定）
+        $user->deleteS3Objects();
+        });
+    }
+
+    public function deleteS3Objects()
+    {
+        //ユーザーのS3UP曲を取得
+        $uploads = $this->uploads;
+
+        foreach($uploads as $upload) {
+            $upload->deleteS3Object();
+        }
+    }
 }
