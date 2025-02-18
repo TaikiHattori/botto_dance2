@@ -17,7 +17,7 @@ class ExtractionController extends Controller
      */
     public function index()
     {
-        // 🔽 追加
+        // ログインしているユーザーのアップロードを取得
         $uploads = Auth::user()->uploads;
         
         // すべてのアップロードに関連するすべての抽出を取得
@@ -25,8 +25,8 @@ class ExtractionController extends Controller
             return $upload->extractions;
         });
         
-        //extractionsテーブルのid数を取得
-        $getCountId = Extraction::count('id');
+        // 現在のユーザーに紐づくupload_idに紐づくextraction_idの数を取得
+        $getCountId = Extraction::whereIn('upload_id', $uploads->pluck('id'))->count();
 
         return view('extractions.index', compact('extractions', 'getCountId'));
     }
