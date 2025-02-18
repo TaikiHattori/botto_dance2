@@ -61,6 +61,10 @@
     .checked {
         border: 6px solid #1c86ee; /* チェックされたときのスタイル */
     }
+
+    .getCountId {
+        font-size:30px;
+    }
   </style>
 
   <div class="py-12 px-4">
@@ -70,6 +74,9 @@
       <div id="hidden-input-container"></div><!-- 隠しフィールドを追加するためのコンテナ -->
       <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">削除</button>
     </form>
+
+    <!-- extractionsテーブルのid数を取得 -->
+    <p class="getCountId">Total：{{ $getCountId }}曲</p>
 
       @foreach ($extractions as $extraction)
         <div class="flex max-w-md mx-auto overflow-hidden rounded-lg shadow-lg mb-4" style="box-shadow: 0px 0px 30px 10px rgb(255 255 255 / 80%);">
