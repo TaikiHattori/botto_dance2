@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Upload;
 use App\Models\Extraction;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log; // Logクラスをインポート
@@ -23,10 +24,11 @@ class ExtractionController extends Controller
         $extractions = $uploads->flatMap(function ($upload) {
             return $upload->extractions;
         });
-
-        //dd($extractions);
         
-        return view('extractions.index', compact('extractions'));
+        //extractionsテーブルのid数を取得
+        $getCountId = Extraction::count('id');
+
+        return view('extractions.index', compact('extractions', 'getCountId'));
     }
 
     /**
