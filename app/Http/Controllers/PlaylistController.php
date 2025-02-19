@@ -55,41 +55,8 @@ class PlaylistController extends Controller
                 'Key' => $key,
             ]);
             
-        // ファイルに出力
-        //  $filePath = 'C:\\Users\\Taiki Hattori\\Desktop\\result_body_output.txt';
-        //   $bytesWritten = file_put_contents($filePath, $result);
-        //  if ($bytesWritten === false) {
-        //      error_log("Failed to write to file: $filePath");
-        //  } else {
-        //      error_log("Successfully wrote $bytesWritten bytes to file: $filePath");
-        //  }
             echo $result['Body'];
         });
-
-
-        //-----------------------------------
-        //11.23時点↓
-        // オブジェクトの取得
-        // $bucket = config('filesystems.disks.s3.bucket');
-        // $key = ltrim(urldecode(parse_url($upload->mp3_url, PHP_URL_PATH)), '/');
-        // $s3Url = $s3->getObjectUrl($bucket, $key);
-
-
-        // // FFmpegを使用して指定された範囲を抽出
-        // $start_seconds = strtotime($extraction->start) - strtotime('TODAY');
-        // $end_seconds = strtotime($extraction->end) - strtotime('TODAY');
-        // $duration_seconds = $end_seconds - $start_seconds;
-
-
-        // ストリーミングレスポンスの作成
-        // $response = new StreamedResponse(function() use ($s3Url, $start_seconds, $duration_seconds) {
-        //     $ffmpegCommand = "ffmpeg -ss $start_seconds -t $duration_seconds -i \"$s3Url\" -f mp3 -";
-        //     passthru($ffmpegCommand);
-        // });
-        //11.23時点↑
-        //-----------------------------------
-
-
     
         $response->headers->set('Content-Type', 'audio/mpeg');
         $response->headers->set('Content-Disposition', 'inline; filename="extracted.mp3"');
