@@ -20,8 +20,13 @@ class UploadController extends Controller
      */
     public function index()
     {
-       $uploads = Auth::user()->uploads;
-        return view('uploads.index', compact('uploads'));
+        // ログインしているユーザーのアップロードを取得 
+        $uploads = Auth::user()->uploads;
+
+        //現在のユーザーに紐づくupload_idの数を取得
+        $getCountId = $uploads->count();
+
+        return view('uploads.index', compact('uploads', 'getCountId'));
     }
 
     /**
