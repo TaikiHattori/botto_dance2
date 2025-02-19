@@ -82,9 +82,14 @@
 
                 <!-- 青満月再生ボタン -->
                 <button id="playButton" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 hover:opacity-80 text-white font-bold py-2 px-4 rounded-full flex items-center justify-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.4" stroke-linecap="round" stroke-linejoin="round" class="w-72 h-72 neon-icon rotate-90">
-                  <circle cx="12" cy="12" r="10"/>
-                  <polygon points="10 8 16 12 10 16 10 8"/>
+                  <svg id="playIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.4" stroke-linecap="round" stroke-linejoin="round" class="w-72 h-72 neon-icon rotate-90">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polygon points="10 8 16 12 10 16 10 8"/>
+                  </svg>
+                  <svg id="pauseIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.4" stroke-linecap="round" stroke-linejoin="round" class="w-72 h-72 neon-icon hidden">
+                     <circle cx="12" cy="12" r="10"/>
+                      <line x1="10" y1="8" x2="10" y2="16"/>
+                      <line x1="14" y1="8" x2="14" y2="16"/>
                   </svg>
                 </button>
             </div>
@@ -106,13 +111,21 @@
                 const playButton = document.getElementById('playButton');
                 const progressCircle = document.getElementById('progressCircle');
                 const fadeDuration = 5; // フェードイン・フェードアウトの時間（秒）
+                const airhorn = document.getElementById('airhorn');
+                const airhornButton = document.getElementById('airhornButton');
+                
+                const playIcon = document.getElementById('playIcon');
+                const pauseIcon = document.getElementById('pauseIcon');
+
                 let audioContext;
                 let currentSource;
                 let currentIndex = 0;
                 let songDuration = 0;
+                
+                let isPlaying = false;
+                let starttime = 0;
+                let elapsedTime = 0;
 
-                const airhorn = document.getElementById('airhorn');
-                const airhornButton = document.getElementById('airhornButton');
 
                 function shuffle(array) {
                   for (let i = array.length - 1; i > 0; i--) {
@@ -137,6 +150,10 @@
 
                 const shuffledExtractions = shuffle(extractions);
 
+                //---------------------------
+                //WebAudioAPIを使わないと連続再生、フェードイン・アウトができなかった
+                //audioタグは1曲再生しかできなかった
+                //---------------------------
                 function fadeIn(audioContext, gainNode, duration) {
                   gainNode.gain.setValueAtTime(0, audioContext.currentTime);
                   gainNode.gain.linearRampToValueAtTime(1, audioContext.currentTime + duration);
@@ -220,13 +237,27 @@
     }
 
                 playButton.addEventListener('click', () => {
-                  playButton.style.transition = 'opacity 0.5s ease'; // トランジションを設定
-                  playButton.style.opacity = '0'; // 透明度を0にする
-                  setTimeout(() => {
+                  if(isPlaying){
+                    //一時停止
+                    currentSource.stop();
+                    elapsedTime += audioContext.currentTime - startTime;
+                    isPlaying = false;
+                    playIcon.classList.remove('hidden');
+                    pauseIcon.classList.add('hidden');                 
+                  } else {
+                    //再生
+                    playButton.style.transition = 'opacity 0.5s ease'; // トランジションを設定
+                    playButton.style.opacity = '0'; // 透明度を0にする
+                    setTimeout(() => {
                     playButton.style.display = 'none'; // 透明度が0になった後に非表示にする
-                  }, 500); // トランジションの時間と同じ500ミリ秒後に非表示にする
-                  playNext();
+                    }, 500); // トランジションの時間と同じ500ミリ秒後に非表示にする
+                    playNext();
+                    isPlaying = true;
+                    playIcon.classList.add('hidden');
+                    pauseIcon.classList.remove('hidden');
+                  }
                 });
+
 
                 airhornButton.addEventListener('click', () => {
                   playCount = 0;
@@ -247,8 +278,6 @@
                     airhorn.play();//最後：フル再生
                   }
                 }
-
-
               });
             </script>
           @endif
