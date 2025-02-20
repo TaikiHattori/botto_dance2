@@ -86,8 +86,7 @@
                     <circle cx="12" cy="12" r="10"/>
                     <polygon points="10 8 16 12 10 16 10 8"/>
                   </svg>
-                  <svg id="pauseIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.4" stroke-linecap="round" stroke-linejoin="round" class="w-72 h-72 neon-icon hidden">
-                     <circle cx="12" cy="12" r="10"/>
+                  <svg id="pauseIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.4" stroke-linecap="round" stroke-linejoin="round" class="w-72 h-72 neon-icon rotate-90 hidden">
                       <line x1="10" y1="8" x2="10" y2="16"/>
                       <line x1="14" y1="8" x2="14" y2="16"/>
                   </svg>
@@ -150,10 +149,10 @@
 
                 const shuffledExtractions = shuffle(extractions);
 
-                //---------------------------
+                //------------------------------------------------------------
                 //WebAudioAPIを使わないと連続再生、フェードイン・アウトができなかった
                 //audioタグは1曲再生しかできなかった
-                //---------------------------
+                //------------------------------------------------------------
                 function fadeIn(audioContext, gainNode, duration) {
                   gainNode.gain.setValueAtTime(0, audioContext.currentTime);
                   gainNode.gain.linearRampToValueAtTime(1, audioContext.currentTime + duration);
@@ -240,17 +239,14 @@
                   if(isPlaying){
                     //一時停止
                     currentSource.stop();
-                    elapsedTime += audioContext.currentTime - startTime;
+                    elapsedTime += audioContext.currentTime - starttime;
                     isPlaying = false;
                     playIcon.classList.remove('hidden');
                     pauseIcon.classList.add('hidden');                 
                   } else {
                     //再生
-                    playButton.style.transition = 'opacity 0.5s ease'; // トランジションを設定
-                    playButton.style.opacity = '0'; // 透明度を0にする
-                    setTimeout(() => {
-                    playButton.style.display = 'none'; // 透明度が0になった後に非表示にする
-                    }, 500); // トランジションの時間と同じ500ミリ秒後に非表示にする
+                    playButton.style.transition = 'opacity 0.5s ease'; // トランジションを設定（ふわっと円周が消える）
+                    
                     playNext();
                     isPlaying = true;
                     playIcon.classList.add('hidden');
