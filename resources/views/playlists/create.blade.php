@@ -217,28 +217,12 @@
                           // };
 
                          
-                          
-                          timerStartTime = Date.now();//再生ボタンをクリックした毎回の時刻
-
-                          // タイマーの開始
-                          timerInterval = setInterval(() => {
-                            //currentTime：再生ボタンクリックからの経過時間
-                            const currentTime = (Date.now() - timerStartTime) / 1000;//Date.now()＝現在の時刻
-                          }, 1000);
-
-
-                          // プログレスバーの更新
-                          function updateProgress() {
-                            const currentTime = (Date.now() - timerStartTime) / 1000;
-                            const progress = Math.min((currentTime + elapsedTime) / songDuration, 1);
-                            const offset = 283 - (progress * 283);
-                            progressCircle.style.strokeDashoffset = offset;
-                            if (progress < 1 && isPlaying) {
-                              progressAnimationFrame = requestAnimationFrame(updateProgress);
-                            }
-                          }
+                          //再生ボタンをクリックした毎回の時刻
+                          timerStartTime = Date.now();
 
                           updateProgress();
+                          startTimer();
+
                         });
                       });
                   } else {
@@ -246,6 +230,31 @@
                     }
                 });
          }
+
+  // プログレスバーの更新
+  function updateProgress() {
+    const currentTime = (Date.now() - timerStartTime) / 1000;
+    const progress = Math.min((currentTime + elapsedTime) / songDuration, 1);
+    const offset = 283 - (progress * 283);
+    progressCircle.style.strokeDashoffset = offset;
+
+    if (progress < 1 && isPlaying) {
+    progressAnimationFrame = requestAnimationFrame(updateProgress);//updateProgress関数の再帰呼び出しで実行条件を記述
+    }
+  }
+
+  // タイマーの開始
+  function startTimer() {
+    timerInterval = setInterval(() => {
+    //currentTime：再生ボタンクリックからの経過時間
+    const currentTime = (Date.now() - timerStartTime) / 1000;//Date.now()＝現在の時刻
+    }, 1000);
+  }
+
+  function stopTimer() {
+    clearInterval(timerInterval);
+    cancelAnimationFrame(progressAnimationFrame);
+  }
 
     //             function playNext() {
     //               if (currentIndex < shuffledExtractions.length) {
@@ -325,8 +334,7 @@
                     if (currentSource){
                     currentSource.stop();
 
-                    clearInterval(timerInterval);//タイマーの停止
-                    cancelAnimationFrame(progressAnimationFrame);//プログレスバーの停止
+                    stopTimer();//タイマーとプログレスバーの停止
 
                     elapsedTime += (Date.now() - timerStartTime) / 1000;//経過時間を更新
                     elapsedTime = Math.min(elapsedTime, songDuration);//elapsedTimeがsongDurationを超えないようにする
