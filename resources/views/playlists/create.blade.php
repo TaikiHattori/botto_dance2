@@ -122,8 +122,11 @@
                 let songDuration = 0;
                 
                 let isPlaying = false;
-                let starttime = 0;
                 let elapsedTime = 0;
+
+                //一時停止再生エラー解決のためにタイマー追加
+                let timerStartTime = 0;
+                let timerInterval;
 
 
                 function shuffle(array) {
@@ -147,8 +150,6 @@
                   return seconds;
                 }
 
-                const shuffledExtractions = shuffle(extractions);
-
                 //------------------------------------------------------------
                 //WebAudioAPIを使わないと連続再生、フェードイン・アウトができなかった
                 //audioタグは1曲再生しかできなかった
@@ -163,11 +164,14 @@
                   gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + duration);
                 }
 
-                function playNext() {
-                  if (currentIndex < shuffledExtractions.length) {
-                    console.log('currentIndex:', currentIndex);// 現在のインデックスが1ずつ増えないと無限ループしてしまう？
-                    console.log('shuffledExtractions.length:', shuffledExtractions.length);
-                    
+
+
+                //------------------------------
+                //play()
+                //------------------------------
+                const shuffledExtractions = shuffle(extractions);
+
+                function play() {                    
                     const extraction = shuffledExtractions[currentIndex];
                     const startSeconds = timeToSeconds(extraction.start);
                     const endSeconds = timeToSeconds(extraction.end);
@@ -185,17 +189,16 @@
                         if (!audioContext) {
                           audioContext = new (window.AudioContext || window.webkitAudioContext)();
                         }
-                        audioContext.decodeAudioData(data, buffer => {
-                          
 
+                        audioContext.decodeAudioData(data, buffer => {
                           // gainNodeの初期化
                           currentSource = audioContext.createBufferSource();
                           gainNode = audioContext.createGain();
                           currentSource.buffer = buffer;
                           currentSource.connect(gainNode).connect(audioContext.destination);
                           
-                          //startメソッド：オーディオバッファソースの再生を開始するためのもの
-                          currentSource.start(0, startSeconds, songDuration);
+                          //startメソッド：オーディオバッファソースを再生
+                          currentSource.start(0, startSeconds + elapsedTime, songDuration - elapsedTime);
 
                           // 再生0秒でfadeDuration秒間のフェードインを開始
                           fadeIn(audioContext, gainNode, fadeDuration);
@@ -204,25 +207,37 @@
                           // (songDuration - fadeDuration)秒後にfadeDuration秒間のフェードアウトを開始
                           setTimeout(() => {
                             fadeOut(audioContext, gainNode, fadeDuration);
-                          }, (songDuration - fadeDuration) * 1000);
+                          }, (songDuration - elapsedTime - fadeDuration) * 1000);
 
-                          currentSource.onended = () => {
-                            currentIndex++;
+                          //再生終了時のonendedイベントハンドラ
+                          // currentSource.onended = () => {
+                          //   currentIndex++;
+                          //   elapsedTime = 0;//経過時間をリセット
+                            
+                          // };
 
-                            playNext();
-                          };
+                         
+                          
+                          timerStartTime = Date.now();//再生ボタンをクリックした毎回の時刻
 
-                         // プログレスバーの更新
-                          const startTime = audioContext.currentTime;
+                          // タイマーの開始
+                          timerInterval = setInterval(() => {
+                            //currentTime：再生ボタンクリックからの経過時間
+                            const currentTime = (Date.now() - timerStartTime) / 1000;//Date.now()＝現在の時刻
+                          }, 1000);
+
+
+                          // プログレスバーの更新
                           function updateProgress() {
-                            const elapsedTime = audioContext.currentTime - startTime;
-                            const progress = Math.min(elapsedTime / songDuration, 1);
+                            const currentTime = (Date.now() - timerStartTime) / 1000;
+                            const progress = Math.min((currentTime + elapsedTime) / songDuration, 1);
                             const offset = 283 - (progress * 283);
                             progressCircle.style.strokeDashoffset = offset;
-                            if (progress < 1) {
-                              requestAnimationFrame(updateProgress);
+                            if (progress < 1 && isPlaying) {
+                              progressAnimationFrame = requestAnimationFrame(updateProgress);
                             }
                           }
+
                           updateProgress();
                         });
                       });
@@ -230,24 +245,102 @@
                         console.log('曲を再生するには、このアカウントで曲をUPしてください。');
                     }
                 });
-        } else {
-            playButton.style.display = 'block'; // 全ての再生が終わったら再生ボタンを表示する
-        }
-    }
+         }
+
+    //             function playNext() {
+    //               if (currentIndex < shuffledExtractions.length) {
+    //                 console.log('currentIndex:', currentIndex);// 現在のインデックスが1ずつ増えないと無限ループしてしまう
+    //                 console.log('shuffledExtractions.length:', shuffledExtractions.length);
+                    
+    //                 const extraction = shuffledExtractions[currentIndex];
+    //                 const startSeconds = timeToSeconds(extraction.start);
+    //                 const endSeconds = timeToSeconds(extraction.end);
+    //                 songDuration = endSeconds - startSeconds;
+
+    //                 // 曲再生の条件をチェック（そのアカウントがUPした曲だけ再生可能）
+    //           fetch(`{{ url('/playlist/check') }}/${extraction.upload_id}`)
+    //             .then(response => response.json())
+    //             .then(data => {
+    //                 if (data.allowed) {
+                    
+    //                 fetch(`{{ url('/playlist/play') }}/${extraction.id}`)
+    //                   .then(response => response.arrayBuffer())
+    //                   .then(data => {
+    //                     if (!audioContext) {
+    //                       audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    //                     }
+    //                     audioContext.decodeAudioData(data, buffer => {
+                          
+
+    //                       // gainNodeの初期化
+    //                       currentSource = audioContext.createBufferSource();
+    //                       gainNode = audioContext.createGain();
+    //                       currentSource.buffer = buffer;
+    //                       currentSource.connect(gainNode).connect(audioContext.destination);
+                          
+    //                       //startメソッド：オーディオバッファソースを再生
+    //                       currentSource.start(0, startSeconds + elapsedTime, songDuration - elapsedTime);
+
+    //                       // 再生0秒でfadeDuration秒間のフェードインを開始
+    //                       fadeIn(audioContext, gainNode, fadeDuration);
+
+    //                       //gainNodeを初期化した後にフェードアウト関数を呼び出さないと機能しない
+    //                       // (songDuration - fadeDuration)秒後にfadeDuration秒間のフェードアウトを開始
+    //                       setTimeout(() => {
+    //                         fadeOut(audioContext, gainNode, fadeDuration);
+    //                       }, (songDuration - elapsedTime - fadeDuration) * 1000);
+
+    //                       currentSource.onended = () => {
+    //                         currentIndex++;
+    //                         elapsedTime = 0;//経過時間をリセット
+    //                         playNext();
+    //                       };
+
+    //                      // プログレスバーの更新
+    //                       const startTime = audioContext.currentTime;
+    //                       function updateProgress() {
+    //                         const currentTime = audioContext.currentTime;
+    //                         const progress = Math.min((currentTime - startTime + elapsedTime) / songDuration, 1);
+    //                         const offset = 283 - (progress * 283);
+    //                         progressCircle.style.strokeDashoffset = offset;
+    //                         if (progress < 1) {
+    //                           requestAnimationFrame(updateProgress);
+    //                         }
+    //                       }
+    //                       updateProgress();
+    //                     });
+    //                   });
+    //               } else {
+    //                     console.log('曲を再生するには、このアカウントで曲をUPしてください。');
+    //                 }
+    //             });
+    //     } else {
+    //         playButton.style.display = 'block'; // 全ての再生が終わったら再生ボタンを表示する
+    //     }
+    // }
 
                 playButton.addEventListener('click', () => {
                   if(isPlaying){
-                    //一時停止
+                    //isPlaying=trueの場合、一時停止
+                    if (currentSource){
                     currentSource.stop();
-                    elapsedTime += audioContext.currentTime - starttime;
+
+                    clearInterval(timerInterval);//タイマーの停止
+                    cancelAnimationFrame(progressAnimationFrame);//プログレスバーの停止
+
+                    elapsedTime += (Date.now() - timerStartTime) / 1000;//経過時間を更新
+                    elapsedTime = Math.min(elapsedTime, songDuration);//elapsedTimeがsongDurationを超えないようにする
+                    console.log('elapsedTime:', elapsedTime);
+
                     isPlaying = false;
                     playIcon.classList.remove('hidden');
                     pauseIcon.classList.add('hidden');                 
-                  } else {
-                    //再生
+                    }
+                } else {
+                    //isPlaying=falseの場合、再生
                     playButton.style.transition = 'opacity 0.5s ease'; // トランジションを設定（ふわっと円周が消える）
-                    
-                    playNext();
+
+                    play();
                     isPlaying = true;
                     playIcon.classList.add('hidden');
                     pauseIcon.classList.remove('hidden');
