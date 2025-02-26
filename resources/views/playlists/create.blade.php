@@ -238,7 +238,7 @@
       elapsedTime = 0; // 経過時間リセット
       elapsedTime1 = 0;//経過時間リセット（各曲の1回目の一時停止時）
       isFirstPause = true;//各曲の1回目の一時停止を検出するフラグリセット
-      timerStartTime = Date.now();//タイマーリセット
+      // timerStartTime = Date.now();//タイマーリセット※ここ削除したらプログレスバー行き過ぎが解消された
       play();
     } else {
       console.log('全曲再生終了');
@@ -249,9 +249,7 @@
   function updateProgress() {
     const currentTime = (Date.now() - timerStartTime) / 1000;
     const progress = Math.min((currentTime + elapsedTime1) / songDuration, 1);
-    // console.log('currentTime:', currentTime);
     console.log('elapsedTime1:', elapsedTime1);
-    // console.log('progress:', progress);
     
     const offset = 283 - (progress * 283);
     progressCircle.style.strokeDashoffset = offset;
@@ -298,12 +296,12 @@
                           elapsedTime1 = Math.min(elapsedTime1, songDuration);//elapsedTime1がsongDurationを超えないようにする
                         } else {
                           //1回目の一時停止時（2曲目以降）
+                          elapsedTime1 = (Date.now() - timerStartTime) / 1000;//※elapsedTime1 = 0ではダメ！！！
                           isFirstPause = false;
                         }
                       } else {
                         //2回目以降の一時停止時（1曲目も2曲目以降も）
-                        elapsedTime1 = elapsedTime ;//ここ変えないと！！！
-                        // elapsedTime1 += (Date.now() - timerStartTime) / 1000;//経過時間を累積していく
+                        elapsedTime1 = elapsedTime;
                         elapsedTime1 = Math.min(elapsedTime1, songDuration);//elapsedTime1がsongDurationを超えないようにする
                         console.log('elapsedTime11:', elapsedTime1);
                       }
