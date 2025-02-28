@@ -20,10 +20,10 @@ class UploadController extends Controller
      */
     public function index()
     {
-        // ログインしているユーザーのアップロードを取得 
-        $uploads = Auth::user()->uploads;
+        // ログインユーザーのアップロードを取得（降順） 
+        $uploads = Auth::user()->uploads()->orderBy('created_at', 'desc')->get();
 
-        //現在のユーザーに紐づくupload_idの数を取得
+        //ログインユーザーに紐づくupload_idの数を取得
         $getCountId = $uploads->count();
 
         return view('uploads.index', compact('uploads', 'getCountId'));
