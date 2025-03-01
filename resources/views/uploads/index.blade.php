@@ -70,6 +70,11 @@
 
 <div class="py-12 px-4">
 
+  <!-- uploadsテーブルのid数を取得 -->
+  <p class="getCountId">Total：{{ $getCountId }}曲</p>
+
+  <br>
+
   <form action="{{ route('uploads.bulkDelete') }}" method="post" onsubmit="updateDeleteForm(); return confirm('本当に削除しますか？');" class="hidden" id="delete-form">
     @csrf
     @method('DELETE')
@@ -77,8 +82,10 @@
     <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">削除</button>
   </form>
 
-  <!-- uploadsテーブルのid数を取得 -->
-  <p class="getCountId">Total：{{ $getCountId }}曲</p>
+  <br>
+
+  <!-- 全てのチェックボックスをチェックするボタン -->
+   <button onclick="checkAllCheckboxes()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4">全て選択</button>
 
   @foreach ($uploads as $upload)
   <div class="flex max-w-md mx-auto overflow-hidden rounded-lg shadow-lg mb-4" style="box-shadow: 0px 0px 30px 10px rgb(255 255 255 / 80%);">
@@ -147,5 +154,24 @@
             }
         });
     }
+
+    function checkAllCheckboxes(){
+      const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+      const allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
+      
+      checkboxes.forEach((checkbox) => {
+        checkbox.checked = !allChecked;
+        const container = checkbox.parentElement;
+        if(checkbox.checked){
+          //!allCheckedの場合（チェックされていない場合）
+            container.classList.add('checked');
+        } else {
+          //allCheckedの場合（チェックされている場合）
+            container.classList.remove('checked');
+        }
+      });
+      toggleDeleteButton();
+    }
+    
   </script>
 </x-app-layout>
