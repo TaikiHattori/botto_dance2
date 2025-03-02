@@ -78,6 +78,10 @@
     <!-- extractionsテーブルのid数を取得 -->
     <p class="getCountId">Total：{{ $getCountId }}曲</p>
 
+    <br>
+
+    <button onclick="checkAllCheckboxes()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4">全て選択</button>
+
       @foreach ($extractions as $extraction)
         <div class="flex max-w-md mx-auto overflow-hidden rounded-lg shadow-lg mb-4" style="box-shadow: 0px 0px 30px 10px rgb(255 255 255 / 80%);">
         <div class="w-1/3  bg-no-repeat bg-contain bg-center" style="background-image: url('{{ asset('storage/images/tsuki2.png') }}')" onclick="toggleCheckbox({{ $extraction->id }})">
@@ -146,5 +150,23 @@
             }
         });
     }
+
+    function checkAllCheckboxes() {
+      const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+      const allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
+
+      checkboxes.forEach((checkbox) => {
+        checkbox.checked = !allChecked;
+        const container = checkbox.parentElement;
+        
+        if(checkbox.checked) {
+          container.classList.add('checked');
+        } else {
+          container.classList.remove('checked');
+        }
+      });
+      toggleDeleteButton();
+    }
+    
   </script>
 </x-app-layout>
