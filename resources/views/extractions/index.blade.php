@@ -68,6 +68,13 @@
   </style>
 
   <div class="py-12 px-4">
+    
+
+    <!-- extractionsテーブルのid数を取得 -->
+    <p class="getCountId">Total：{{ $getCountId }}曲</p>
+
+    <br>
+
     <form action="{{ route('extractions.bulkDelete') }}" method="post" onsubmit="updateDeleteForm(); return confirm('本当に削除しますか？');" class="hidden" id="delete-form">
       @csrf
       @method('DELETE')
@@ -75,11 +82,8 @@
       <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">削除</button>
     </form>
 
-    <!-- extractionsテーブルのid数を取得 -->
-    <p class="getCountId">Total：{{ $getCountId }}曲</p>
-
     <br>
-
+    
     <button onclick="checkAllCheckboxes()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4">全て選択</button>
 
       @foreach ($extractions as $extraction)
