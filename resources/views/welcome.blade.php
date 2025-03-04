@@ -67,7 +67,8 @@
 
 <body>
     <div class="login-container">
-        <h1>ログイン</h1>
+        <h1>botto dance</h1>
+        <h2>ログイン</h2>
         <form method="POST" action="{{ route('login') }}">
             @csrf
             <input type="email" name="email" placeholder="Email">
