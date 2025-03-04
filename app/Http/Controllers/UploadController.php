@@ -52,16 +52,20 @@ class UploadController extends Controller
             //  バリデーションのデバッグ
             Log::info('Starting file upload process');
             
-            // $validated = $request->validate([
-            //     'file' => 'required|mimes:mp3',
-            // ]);
-            // Log::info('File validation passed');
-
-            //dd($validated);
+            $validated = $request->validate([
+                'files.*' => 'required|mimes:mp3',
+            ]);
+            Log::info('File validation passed');
     
-            //  ファイル情報のデバッグ
-            $file = $request->file('file');
+            //--------------------------------
+            //  複数UPループ処理
+            //--------------------------------
+            $files = $request->file('files');
+            dd($files);
+
+            foreach($files as $file){
             $fileName = $file->getClientOriginalName();
+            
             Log::info('File details', [
                 'name' => $fileName,
                 'size' => $file->getSize(),
@@ -113,8 +117,18 @@ class UploadController extends Controller
             ];
             Log::info('Attempting S3 upload with params', $uploadParams);
 
-            $result = $s3->putObject($uploadParams);
-            Log::info('S3 upload successful', ['url' => $result['ObjectURL']]);
+            try {
+                $result = $s3->putObject($uploadParams);
+                Log::info('S3 upload successful', ['url' => $result['ObjectURL']]);
+            } catch (AwsException $e) {
+                Log::error('AWS Error during S3 upload', [
+                    'message' => $e->getMessage(),
+                    'code' => $e->getAwsErrorCode(),
+                    'type' => $e->getAwsErrorType(),
+                    'request_id' => $e->getAwsRequestId()
+                ]);
+                continue; // 次のmp3ファイルに進む
+            }
 
             //ジャンルログ
             $genreSelect = $request->genreSelect;//selectタグの取得（name属性を指定）
@@ -138,11 +152,15 @@ class UploadController extends Controller
                 'genre' => $genre,
             ]);
             Log::info('Database record created', ['upload_id' => $upload->id]);
+        }
+            
+        return redirect()
+            ->route('uploads.index')
+            ->with('success', 'Files uploaded successfully')
+            ->with('s3_url', $result['ObjectURL']);
 
-            return redirect()
-                ->route('uploads.index')
-                ->with('success', 'File uploaded successfully')
-                ->with('s3_url', $result['ObjectURL']);
+
+
 
         } catch (AwsException $e) {
             Log::error('AWS Error', [
