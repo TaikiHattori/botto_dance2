@@ -49,8 +49,7 @@ class UploadController extends Controller
     public function store(Request $request)
     {        
         try {
-            //  バリデーションのデバッグ
-            Log::info('Starting file upload process');
+            Log::info('Starting upload !');
             
             $validated = $request->validate([
                 'files.*' => 'required|mimes:mp3',
@@ -61,16 +60,26 @@ class UploadController extends Controller
             //  複数UPループ処理
             //--------------------------------
             $files = $request->file('files');
-            dd($files);
+            // dd($files);
 
             foreach($files as $file){
             $fileName = $file->getClientOriginalName();
+            $fileSize = $file->getSize();
+            $fileMime = $file->getMimeType();
+            $filePath = $file->getPathname();
+
+            //重複チェック
+            $existingFile = Upload::where('title', $fileName)->first();
+
+            if ($existingFile) {
+                return back()->withErrors(['error' => 'その曲は既にアップロードされています'])->withInput();
+            }
             
             Log::info('File details', [
                 'name' => $fileName,
-                'size' => $file->getSize(),
-                'mime' => $file->getMimeType(),
-                'path' => $file->getPathname()
+                'size' => $fileSize,
+                'mime' => $fileMime,
+                'path' => $filePath
             ]);
 
             //曲の長さを取得
