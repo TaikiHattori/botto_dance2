@@ -63,7 +63,9 @@
         <br>
         <!-- ジャンル選択または入力 -->
         <div>
-            <label  class="block text-white">ジャンルを選択または入力（任意）：</label>
+            <label  class="block text-white">
+              ジャンルを選択または入力（任意）：
+            </label>
               <select id="genre-select" name="genreSelect" class="block w-full mt-1">
                 <option value="">選択</option>
                 <option value="ヒップホップ">ヒップホップ</option>
@@ -72,7 +74,7 @@
                 <option value="アニソン">アニソン</option>
               </select>
               <input type="text" id="genre-input" name="genreInput" class="block w-full mt-2" placeholder="または入力">
-            </label>
+    </label>
         </div>
     <button type="submit" class="w-full border-solid border border-white mt-4 hover:opacity-80 text-white font-bold py-2 px-4 rounded">アップロード</button>
 
