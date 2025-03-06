@@ -72,7 +72,8 @@ class UploadController extends Controller
             $existingFile = Upload::where('title', $fileName)->first();
 
             if ($existingFile) {
-                return back()->withErrors(['error' => 'その曲は既にアップロードされています'])->withInput();
+                return redirect()->route('uploads.create')
+                ->with('error','その曲は既にアップロードされています');
             }
             
             Log::info('File details', [
