@@ -18,10 +18,19 @@ class UploadController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         // ログインユーザーのアップロードを取得（降順） 
-        $uploads = Auth::user()->uploads()->orderBy('created_at', 'desc')->get();
+        $query = Auth::user()->uploads()->orderBy('created_at', 'desc');
+
+        //検索クエリが存在する場合、フィルタリング
+        if ($request->has('search')) {
+            $search = $request->input('search');
+            $query->where('title', 'LIKE', "%{$search}%");
+        }
+
+        //フィルタリングされた結果を取得
+        $uploads = $query->get();
 
         //ログインユーザーに紐づくupload_idの数を取得
         $getCountId = $uploads->count();

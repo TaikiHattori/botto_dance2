@@ -66,6 +66,10 @@
     .getCountId {
       font-size:30px;
     }
+
+    input {
+      color: #000000;
+    }
   </style>
 
 <div class="py-12 px-4">
@@ -86,6 +90,14 @@
 
   <!-- 全てのチェックボックスをチェックするボタン -->
    <button onclick="checkAllCheckboxes()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4">全て選択</button>
+
+  <br>
+
+  <!-- 検索フォーム -->
+  <form action="{{ route('uploads.index') }}" method="GET"><!-- GETでURLに検索ワードを表示させる-->
+    <input type="text" name="search" placeholder="曲名で検索" class="border rounded py-2 px-4">
+    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">検索</button>
+  </form>
 
   @foreach ($uploads as $upload)
   <div class="flex max-w-md mx-auto overflow-hidden rounded-lg shadow-lg mb-4" style="box-shadow: 0px 0px 30px 10px rgb(255 255 255 / 80%);">
