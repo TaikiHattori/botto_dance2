@@ -26,6 +26,7 @@ class UploadController extends Controller
         //検索クエリが存在する場合、フィルタリング
         if ($request->has('search')) {
             $search = $request->input('search');
+            //テーブルに存在するカラムしか検索できない
             $query->where('title', 'LIKE', "%{$search}%");
         }
 
