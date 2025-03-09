@@ -15,18 +15,26 @@ class ExtractionController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         // ログインユーザーのアップロードを取得（降順）
-        $uploads = Auth::user()->uploads()->orderBy('created_at', 'desc')->get();
+        $uploads = Auth::user()->uploads()->orderBy('created_at', 'desc');
         
-        // ログインユーザーのすべてのアップロードに関連するすべての抽出を取得
+        // 検索クエリが存在する場合、フィルタリング
+        if ($request->has('search')) {
+            $search = $request->input('search');
+            $uploads->where('title', 'LIKE', "%{$search}%");
+        }
+
+        $uploads = $uploads->get();
+
+        // アップロードに関連するすべての抽出を取得
         $extractions = $uploads->flatMap(function ($upload) {
             return $upload->extractions;
         });
-        
+
         // 現在のユーザーに紐づくupload_idに紐づくextraction_idの数を取得
-        $getCountId = Extraction::whereIn('upload_id', $uploads->pluck('id'))->count();
+        $getCountId = $extractions->count();
 
         return view('extractions.index', compact('extractions', 'getCountId'));
     }
