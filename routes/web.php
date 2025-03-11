@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UploadController;
 use App\Http\Controllers\ExtractionController;
 use App\Http\Controllers\PlaylistController;
+use App\Http\Controllers\InquiryController;
 
 
 Route::get('/', function () {
@@ -45,7 +46,8 @@ Route::delete('/extractions', [ExtractionController::class, 'bulkDelete'])->name
 Route::get('/extractions/{extraction}/edit', [ExtractionController::class, 'edit'])->name('extractions.edit');
 Route::put('/extractions/{extraction}', [ExtractionController::class, 'update'])->name('extractions.update');
 
-
 Route::get('/playlists/create', [PlaylistController::class, 'create'])->name('playlists.create');
 Route::get('/playlist/play/{id}', [PlaylistController::class, 'play'])->name('playlists.play');
 Route::get('/playlist/check/{id}', [PlaylistController::class, 'check'])->name('playlists.check');
+
+Route::get('/inquiries/create', [InquiryController::class, 'create'])->name('inquiries.create');
