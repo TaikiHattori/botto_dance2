@@ -14,7 +14,7 @@
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('playlists.create')" :active="request()->routeIs('playlists.create')">
-                        {{ __('botto') }}
+                    {{ __('botto') }}
                     </x-nav-link>
                     <x-nav-link :href="route('uploads.create')" :active="request()->routeIs('uploads.create')">
                     {{ __('アップロード') }}
@@ -24,6 +24,9 @@
                     </x-nav-link>
                     <x-nav-link :href="route('extractions.index')" :active="request()->routeIs('extractions.index')">
                     {{ __('プレイリスト') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('inquiries.create')" :active="request()->routeIs('inquiries.create')">
+                    {{ __('お問い合わせ') }}
                     </x-nav-link>
                 </div>
             </div>
@@ -86,8 +89,11 @@
             <x-responsive-nav-link :href="route('uploads.index')" :active="request()->routeIs('uploads.index')">
             {{ __('ライブラリ') }}
             </x-responsive-nav-link>
-             <x-responsive-nav-link :href="route('extractions.index')" :active="request()->routeIs('extractions.index')">
+            <x-responsive-nav-link :href="route('extractions.index')" :active="request()->routeIs('extractions.index')">
             {{ __('プレイリスト') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('inquiries.create')" :active="request()->routeIs('inquiries.create')">
+            {{ __('お問い合わせ') }}
             </x-responsive-nav-link>
         </div>
 
